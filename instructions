@@ -1,5 +1,0 @@
-flex c_lexer.l
-bison -d -v parser_gen.y
-g++ -c lex.yy.c
-g++ -c parser_gen.tab.c
-g++ lex.yy.o parser_gen.tab.o -o testing

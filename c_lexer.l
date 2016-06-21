@@ -1,15 +1,16 @@
 %{
-  #include "headers.h"
+  #include <string>
+  #include <vector>
+  using namespace std;
   #include "parser_gen.tab.h"
   int yyerror(char *s);
-  using namespace std;
 %}
 
 DIGITS    [0-9]+
 LETTERS   [a-xA-Z]+
 ID        id[A-Z][a-z]*
-CHARS     (\"[a-zA-Z0-9]+\")|(\'[a-zA-Z0-9]+\')
-COMMENTS  "//".*
+CHARS     \".+\"
+COMMENTS  \/\/.*
 
 %%
 
@@ -51,7 +52,7 @@ read        { yylval.letters = new string(yytext); return READ; }
 {CHARS}     { /* characters */ /* printf("CHARS: %s\n", yytext); */ yylval.letters = new string(yytext); return CHARS; }
 {COMMENTS}  { /* do nothing */ }
 {DIGITS}    { /* printf("DIGITS: %s\n", yytext);*/ yylval.letters = new string(yytext); yylval.letters = new string(yytext); return DIGITS; }
-
+.           { yylval.letters = new string(yytext); return yytext[0]; }
 %%
 
 int yywrap(void) {

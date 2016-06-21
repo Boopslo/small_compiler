@@ -80,26 +80,27 @@
      READ = 269,
      SEMI = 270,
      COMMA = 271,
-     RS = 272,
-     LS = 273,
-     RB = 274,
+     ASSIGN = 272,
+     LP = 273,
+     RP = 274,
      LB = 275,
-     RP = 276,
-     LP = 277,
-     OR = 278,
-     AND = 279,
-     GE = 280,
-     LE = 281,
-     GT = 282,
-     LT = 283,
-     NE = 284,
-     EQ = 285,
-     DIVIDE = 286,
-     MULT = 287,
-     ASSIGN = 288,
-     NOT = 289,
-     MINUS = 290,
-     PLUS = 291
+     RB = 276,
+     LS = 277,
+     RS = 278,
+     OR = 279,
+     AND = 280,
+     GE = 281,
+     LE = 282,
+     GT = 283,
+     LT = 284,
+     NE = 285,
+     EQ = 286,
+     MINUS = 287,
+     PLUS = 288,
+     DIVIDE = 289,
+     MULT = 290,
+     NOT = 291,
+     NEG = 292
    };
 #endif
 /* Tokens.  */
@@ -117,26 +118,27 @@
 #define READ 269
 #define SEMI 270
 #define COMMA 271
-#define RS 272
-#define LS 273
-#define RB 274
+#define ASSIGN 272
+#define LP 273
+#define RP 274
 #define LB 275
-#define RP 276
-#define LP 277
-#define OR 278
-#define AND 279
-#define GE 280
-#define LE 281
-#define GT 282
-#define LT 283
-#define NE 284
-#define EQ 285
-#define DIVIDE 286
-#define MULT 287
-#define ASSIGN 288
-#define NOT 289
-#define MINUS 290
-#define PLUS 291
+#define RB 276
+#define LS 277
+#define RS 278
+#define OR 279
+#define AND 280
+#define GE 281
+#define LE 282
+#define GT 283
+#define LT 284
+#define NE 285
+#define EQ 286
+#define MINUS 287
+#define PLUS 288
+#define DIVIDE 289
+#define MULT 290
+#define NOT 291
+#define NEG 292
 
 
 
@@ -149,6 +151,21 @@
   extern int yylex(void);
   extern int yylineno;
   extern FILE *yyin;
+  fstream fp;
+  vector<string> *code_section;
+  vector<string> *save_section;
+  string *op_ptr;
+  string *temp_ptr;
+  string *reg_ptr;
+  vector<string> op_stack;
+  string tempreg;
+  map<string, attribute> *temp_var;
+  int stack_top = 0;
+  /* vector to print out */
+  vector<string> instruction, code_expr;
+  vector<string>:: iterator it;
+  string kindOfOperator;
+  int parameter_count = 0;
 
 
 /* Enabling traces.  */
@@ -171,13 +188,13 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 9 "parser_gen.y"
+#line 24 "parser_gen.y"
 {
-  std::vector <std::string> *code;
-  std::string *letters;
+  vector<string> *code;
+  string *letters;
 }
 /* Line 193 of yacc.c.  */
-#line 181 "parser_gen.tab.c"
+#line 198 "parser_gen.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -190,7 +207,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 194 "parser_gen.tab.c"
+#line 211 "parser_gen.tab.c"
 
 #ifdef short
 # undef short
@@ -405,20 +422,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  7
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   126
+#define YYLAST   132
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  37
+#define YYNTOKENS  38
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  28
+#define YYNNTS  19
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  68
+#define YYNRULES  60
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  118
+#define YYNSTATES  113
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   291
+#define YYMAXUTOK   292
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -455,7 +472,7 @@ static const yytype_uint8 yytranslate[] =
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36
+      35,    36,    37
 };
 
 #if YYDEBUG
@@ -463,49 +480,50 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     5,     8,     9,    13,    15,    17,    21,
-      23,    28,    33,    36,    37,    39,    40,    43,    46,    47,
-      51,    54,    55,    60,    62,    64,    67,    69,    70,    72,
-      75,    79,    82,    90,    96,    98,   102,   106,   109,   112,
-     117,   120,   123,   125,   130,   135,   138,   140,   143,   146,
-     147,   149,   150,   153,   156,   157,   159,   161,   163,   165,
-     167,   169,   171,   173,   175,   177,   179,   181,   183
+       0,     0,     3,     5,     8,     9,    13,    20,    24,    28,
+      35,    40,    43,    45,    47,    48,    52,    54,    57,    62,
+      67,    71,    73,    75,    78,    80,    82,    85,    89,    92,
+     100,   106,   108,   112,   116,   118,   122,   124,   126,   130,
+     137,   142,   149,   154,   156,   158,   162,   166,   169,   172,
+     174,   176,   178,   180,   182,   184,   186,   188,   190,   192,
+     194
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      38,     0,    -1,    39,    -1,    40,    39,    -1,    -1,    52,
-       6,    41,    -1,    43,    -1,    44,    -1,    52,     6,    43,
-      -1,    15,    -1,    18,     5,    17,    15,    -1,    22,    46,
-      21,    51,    -1,    42,    45,    -1,    -1,    47,    -1,    -1,
-      49,    48,    -1,    16,    47,    -1,    -1,    52,     6,    50,
-      -1,    18,    17,    -1,    -1,    20,    45,    53,    19,    -1,
-       3,    -1,     4,    -1,    55,    54,    -1,    53,    -1,    -1,
-      15,    -1,    56,    15,    -1,     8,    56,    15,    -1,    12,
-      15,    -1,     9,    22,    56,    21,    55,    10,    55,    -1,
-      11,    22,    56,    21,    55,    -1,    51,    -1,    13,     6,
-      15,    -1,    14,     6,    15,    -1,    63,    56,    -1,     5,
-      59,    -1,    22,    56,    21,    59,    -1,     6,    57,    -1,
-       7,    59,    -1,    59,    -1,    22,    60,    21,    59,    -1,
-      18,    56,    17,    58,    -1,    33,    56,    -1,    59,    -1,
-      33,    56,    -1,    64,    56,    -1,    -1,    61,    -1,    -1,
-      56,    62,    -1,    16,    61,    -1,    -1,    35,    -1,    34,
-      -1,    36,    -1,    35,    -1,    32,    -1,    31,    -1,    30,
-      -1,    29,    -1,    28,    -1,    26,    -1,    27,    -1,    25,
-      -1,    24,    -1,    23,    -1
+      39,     0,    -1,    40,    -1,    41,    40,    -1,    -1,    49,
+       6,    15,    -1,    49,     6,    22,     5,    23,    15,    -1,
+      49,     6,    43,    -1,    49,     6,    15,    -1,    49,     6,
+      22,     5,    23,    15,    -1,    18,    45,    19,    48,    -1,
+      42,    44,    -1,    42,    -1,    46,    -1,    -1,    47,    16,
+      46,    -1,    47,    -1,    49,     6,    -1,    49,     6,    22,
+      23,    -1,    20,    44,    50,    21,    -1,    20,    50,    21,
+      -1,     3,    -1,     4,    -1,    51,    50,    -1,    51,    -1,
+      15,    -1,    54,    15,    -1,     8,    54,    15,    -1,    12,
+      15,    -1,     9,    18,    54,    19,    51,    10,    51,    -1,
+      11,    18,    54,    19,    51,    -1,    48,    -1,    13,     6,
+      15,    -1,    14,     6,    15,    -1,    54,    -1,    52,    16,
+      54,    -1,     6,    -1,     5,    -1,     6,    17,    54,    -1,
+       6,    22,    54,    23,    56,    54,    -1,     6,    22,    54,
+      23,    -1,     6,    22,    54,    23,    17,    54,    -1,     6,
+      18,    52,    19,    -1,    55,    -1,    53,    -1,    18,    54,
+      19,    -1,    55,    56,    55,    -1,    32,    55,    -1,    36,
+      55,    -1,    33,    -1,    32,    -1,    35,    -1,    34,    -1,
+      31,    -1,    30,    -1,    29,    -1,    27,    -1,    28,    -1,
+      26,    -1,    25,    -1,    24,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    29,    29,    31,    32,    34,    36,    37,    39,    41,
-      42,    44,    46,    47,    49,    50,    52,    54,    55,    57,
-      59,    60,    62,    64,    65,    67,    69,    70,    72,    73,
-      74,    75,    76,    77,    78,    79,    80,    82,    83,    84,
-      85,    86,    88,    89,    90,    91,    93,    94,    96,    97,
-      99,   100,   102,   104,   105,   107,   108,   110,   111,   112,
-     113,   114,   115,   116,   117,   118,   119,   120,   121
+       0,    49,    49,    56,    60,    63,    68,    74,    80,    89,
+      97,   101,   106,   114,   118,   121,   124,   132,   140,   149,
+     153,   159,   162,   167,   172,   181,   182,   192,   201,   205,
+     209,   213,   217,   252,   276,   279,   284,   294,   306,   314,
+     318,   322,   325,   328,   331,   332,   336,   357,   367,   379,
+     387,   395,   403,   411,   419,   427,   435,   443,   451,   459,
+     467
 };
 #endif
 
@@ -516,14 +534,12 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "INT", "CHAR", "DIGITS", "ID", "CHARS",
   "RETURN", "IF", "ELSE", "WHILE", "BREAK", "PRINT", "READ", "SEMI",
-  "COMMA", "RS", "LS", "RB", "LB", "RP", "LP", "OR", "AND", "GE", "LE",
-  "GT", "LT", "NE", "EQ", "DIVIDE", "MULT", "ASSIGN", "NOT", "MINUS",
-  "PLUS", "$accept", "Program", "DeclList", "_DeclList", "Decl", "VarDecl",
-  "_VarDecl", "FunDecl", "VarDeclList", "ParamDeclList",
-  "ParamDeclListTail", "_ParamDeclListTail", "ParamDecl", "_ParamDecl",
-  "Block", "Type", "StmtList", "_StmtList", "Stmt", "Expr", "ExprIdTail",
-  "ExprArrayTail", "_Expr", "ExprList", "ExprListTail", "_ExprListTail",
-  "UnaryOp", "BinaryOp", 0
+  "COMMA", "ASSIGN", "LP", "RP", "LB", "RB", "LS", "RS", "OR", "AND", "GE",
+  "LE", "GT", "LT", "NE", "EQ", "MINUS", "PLUS", "DIVIDE", "MULT", "NOT",
+  "NEG", "$accept", "Program", "DeclList", "_DeclList", "VarDecl",
+  "FunDecl", "VarDeclList", "ParamDeclList", "ParamDeclListTail",
+  "ParamDecl", "Block", "Type", "StmtList", "Stmt", "ExprList", "Node",
+  "Expr", "Operation", "BinaryOp", 0
 };
 #endif
 
@@ -535,32 +551,32 @@ static const yytype_uint16 yytoknum[] =
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291
+     285,   286,   287,   288,   289,   290,   291,   292
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    37,    38,    39,    39,    40,    41,    41,    42,    43,
-      43,    44,    45,    45,    46,    46,    47,    48,    48,    49,
-      50,    50,    51,    52,    52,    53,    54,    54,    55,    55,
-      55,    55,    55,    55,    55,    55,    55,    56,    56,    56,
-      56,    56,    57,    57,    57,    57,    58,    58,    59,    59,
-      60,    60,    61,    62,    62,    63,    63,    64,    64,    64,
-      64,    64,    64,    64,    64,    64,    64,    64,    64
+       0,    38,    39,    40,    40,    41,    41,    41,    42,    42,
+      43,    44,    44,    45,    45,    46,    46,    47,    47,    48,
+      48,    49,    49,    50,    50,    51,    51,    51,    51,    51,
+      51,    51,    51,    51,    52,    52,    53,    53,    54,    54,
+      54,    54,    54,    54,    55,    55,    55,    55,    55,    56,
+      56,    56,    56,    56,    56,    56,    56,    56,    56,    56,
+      56
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     2,     0,     3,     1,     1,     3,     1,
-       4,     4,     2,     0,     1,     0,     2,     2,     0,     3,
-       2,     0,     4,     1,     1,     2,     1,     0,     1,     2,
-       3,     2,     7,     5,     1,     3,     3,     2,     2,     4,
-       2,     2,     1,     4,     4,     2,     1,     2,     2,     0,
-       1,     0,     2,     2,     0,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     1
+       0,     2,     1,     2,     0,     3,     6,     3,     3,     6,
+       4,     2,     1,     1,     0,     3,     1,     2,     4,     4,
+       3,     1,     1,     2,     1,     1,     2,     3,     2,     7,
+       5,     1,     3,     3,     1,     3,     1,     1,     3,     6,
+       4,     6,     4,     1,     1,     3,     3,     2,     2,     1,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
+       1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -568,53 +584,51 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       4,    23,    24,     0,     2,     4,     0,     1,     3,     0,
-       9,     0,    15,     5,     6,     7,     0,     0,    14,    18,
-       0,     0,     0,     0,    16,    21,    10,    13,    11,    17,
-       0,    19,    13,     0,     0,    20,    12,    49,    49,    49,
-       0,     0,     0,     0,     0,     0,    28,     0,    56,    55,
-      34,     0,    27,     0,     0,     0,    68,    67,    66,    64,
-      65,    63,    62,    61,    60,    59,    58,    57,    38,     0,
-       0,    51,     0,    40,    42,    41,     0,     0,     0,    31,
-       0,     0,     0,    22,    26,    25,    29,    37,     8,    48,
-       0,    54,     0,    50,    45,    30,     0,     0,    35,    36,
-      49,    49,     0,    52,    49,     0,     0,    39,     0,    44,
-      46,    53,    43,     0,    33,    47,     0,    32
+       4,    21,    22,     0,     2,     4,     0,     1,     3,     0,
+       5,    14,     0,     7,     0,    13,    16,     0,     0,     0,
+       0,    17,     0,     0,    10,    15,     0,     6,    37,    36,
+       0,     0,     0,     0,     0,     0,    25,     0,     0,     0,
+      12,     0,    31,     0,     0,    24,    44,     0,    43,    18,
+       0,     0,     0,     0,     0,     0,    28,     0,     0,     0,
+      36,    47,    48,    11,     0,     0,    20,    23,    26,    60,
+      59,    58,    56,    57,    55,    54,    53,    50,    49,    52,
+      51,     0,    38,     0,    34,     0,    27,     0,     0,    32,
+      33,    45,    19,     8,     0,    46,     0,    42,    40,     0,
+       0,     0,    35,     0,     0,     0,    30,     0,    41,    39,
+       0,     9,    29
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     3,     4,     5,    13,    32,    14,    15,    33,    17,
-      18,    24,    19,    31,    50,     6,    51,    85,    52,    53,
-      73,   109,    68,    92,    93,   103,    54,    69
+      -1,     3,     4,     5,    40,    13,    41,    14,    15,    16,
+      42,     6,    44,    45,    83,    46,    47,    48,    81
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -102
+#define YYPACT_NINF -92
 static const yytype_int8 yypact[] =
 {
-       9,  -102,  -102,    16,  -102,     9,     3,  -102,  -102,   -12,
-    -102,    12,     9,  -102,  -102,  -102,     6,    15,  -102,    23,
-      37,    29,    26,     9,  -102,    32,  -102,     9,  -102,  -102,
-      34,  -102,     9,    13,    46,  -102,  -102,    81,    53,    81,
-      35,    31,    33,    41,    52,    54,  -102,    35,  -102,  -102,
-    -102,    40,    13,    50,    35,    -7,  -102,  -102,  -102,  -102,
-    -102,  -102,  -102,  -102,  -102,  -102,  -102,  -102,  -102,    35,
-      35,    35,    35,  -102,  -102,  -102,    51,    35,    35,  -102,
-      57,    58,    66,  -102,  -102,  -102,  -102,  -102,  -102,  -102,
-      44,    85,    93,  -102,  -102,  -102,    94,    97,  -102,  -102,
-      81,    67,    35,  -102,    81,    13,    13,  -102,    35,  -102,
-    -102,  -102,  -102,    64,  -102,  -102,    13,  -102
+      36,   -92,   -92,    11,   -92,    36,     9,   -92,   -92,   -12,
+     -92,    36,    12,   -92,     4,   -92,    14,    41,    19,    29,
+      36,    30,    38,    23,   -92,   -92,    31,   -92,   -92,    28,
+      59,    39,    40,    45,    50,    55,   -92,    59,    62,    62,
+      36,    70,   -92,    56,    42,    70,   -92,    54,    95,   -92,
+      59,    59,    59,    57,    59,    59,   -92,    71,    72,    51,
+     -92,   -92,   -92,   -92,    68,   -10,   -92,   -92,   -92,   -92,
+     -92,   -92,   -92,   -92,   -92,   -92,   -92,   -92,   -92,   -92,
+     -92,    62,   -92,    32,   -92,    48,   -92,    73,    74,   -92,
+     -92,   -92,   -92,   -92,    91,    95,    59,   -92,    83,    70,
+      70,    76,   -92,    59,    59,    87,   -92,    86,   -92,   -92,
+      70,   -92,   -92
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-    -102,  -102,   114,  -102,  -102,  -102,    65,  -102,    89,  -102,
-      99,  -102,  -102,  -102,   101,    22,    72,  -102,  -101,   -40,
-    -102,  -102,   -37,  -102,    24,  -102,  -102,  -102
+     -92,   -92,    98,   -92,   -92,   -92,    64,   -92,    85,   -92,
+     112,    -7,   -27,   -91,   -92,   -92,   -30,   -37,    34
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -624,54 +638,56 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      76,    74,    75,    10,   113,   114,    11,    82,    10,     9,
-      12,    11,     1,     2,    87,   117,     7,    16,    37,    38,
-      39,    40,    41,    21,    42,    43,    44,    45,    46,    89,
-      90,    91,    94,    27,    20,    47,    22,    96,    97,    23,
-      37,    38,    39,    25,    26,    20,    27,    48,    49,    34,
-      30,    35,    55,    77,    34,    78,    79,    47,    80,    83,
-      81,   101,    91,   107,   110,    86,    95,   112,   115,    48,
-      49,    70,    98,    99,   116,    71,    56,    57,    58,    59,
-      60,    61,    62,    63,    64,    65,    72,   100,    66,    67,
-      56,    57,    58,    59,    60,    61,    62,    63,    64,    65,
-     108,   102,    66,    67,    56,    57,    58,    59,    60,    61,
-      62,    63,    64,    65,   104,   105,    66,    67,   106,     8,
-      88,    36,    29,    28,    84,     0,   111
+      53,    61,    62,    10,    17,    93,    11,    59,   105,   106,
+      12,     7,    94,    17,    64,     9,    43,    18,    67,   112,
+      82,    84,    85,    19,    87,    88,     1,     2,    28,    29,
+      20,    30,    31,    43,    32,    33,    34,    35,    36,     1,
+       2,    37,    22,    23,    95,    50,    51,    21,    96,    23,
+      52,    97,    26,    27,    49,    38,    57,    54,    55,    39,
+      56,    58,    65,    66,    28,    29,   102,    28,    60,    68,
+      91,    98,    86,   108,   109,    28,    29,    37,    30,    31,
+      37,    32,    33,    34,    35,    36,    89,    90,    37,    92,
+      23,    38,    99,   100,    38,    39,   101,   110,    39,   107,
+     103,   111,    38,     8,    63,    25,    39,    69,    70,    71,
+      72,    73,    74,    75,    76,    77,    78,    79,    80,    69,
+      70,    71,    72,    73,    74,    75,    76,    77,    78,    79,
+      80,    24,   104
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_uint8 yycheck[] =
 {
-      40,    38,    39,    15,   105,   106,    18,    47,    15,     6,
-      22,    18,     3,     4,    54,   116,     0,     5,     5,     6,
-       7,     8,     9,    17,    11,    12,    13,    14,    15,    69,
-      70,    71,    72,    20,    12,    22,    21,    77,    78,    16,
-       5,     6,     7,     6,    15,    23,    20,    34,    35,    27,
-      18,    17,     6,    22,    32,    22,    15,    22,     6,    19,
-       6,    17,   102,   100,   101,    15,    15,   104,   108,    34,
-      35,    18,    15,    15,    10,    22,    23,    24,    25,    26,
-      27,    28,    29,    30,    31,    32,    33,    21,    35,    36,
-      23,    24,    25,    26,    27,    28,    29,    30,    31,    32,
-      33,    16,    35,    36,    23,    24,    25,    26,    27,    28,
-      29,    30,    31,    32,    21,    21,    35,    36,    21,     5,
-      55,    32,    23,    22,    52,    -1,   102
+      30,    38,    39,    15,    11,    15,    18,    37,    99,   100,
+      22,     0,    22,    20,    41,     6,    23,     5,    45,   110,
+      50,    51,    52,    19,    54,    55,     3,     4,     5,     6,
+      16,     8,     9,    40,    11,    12,    13,    14,    15,     3,
+       4,    18,    23,    20,    81,    17,    18,     6,    16,    20,
+      22,    19,    22,    15,    23,    32,     6,    18,    18,    36,
+      15,     6,     6,    21,     5,     6,    96,     5,     6,    15,
+      19,    23,    15,   103,   104,     5,     6,    18,     8,     9,
+      18,    11,    12,    13,    14,    15,    15,    15,    18,    21,
+      20,    32,    19,    19,    32,    36,     5,    10,    36,    23,
+      17,    15,    32,     5,    40,    20,    36,    24,    25,    26,
+      27,    28,    29,    30,    31,    32,    33,    34,    35,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    19,    98
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     3,     4,    38,    39,    40,    52,     0,    39,     6,
-      15,    18,    22,    41,    43,    44,     5,    46,    47,    49,
-      52,    17,    21,    16,    48,     6,    15,    20,    51,    47,
-      18,    50,    42,    45,    52,    17,    45,     5,     6,     7,
-       8,     9,    11,    12,    13,    14,    15,    22,    34,    35,
-      51,    53,    55,    56,    63,     6,    23,    24,    25,    26,
-      27,    28,    29,    30,    31,    32,    35,    36,    59,    64,
-      18,    22,    33,    57,    59,    59,    56,    22,    22,    15,
-       6,     6,    56,    19,    53,    54,    15,    56,    43,    56,
-      56,    56,    60,    61,    56,    15,    56,    56,    15,    15,
-      21,    17,    16,    62,    21,    21,    21,    59,    33,    58,
-      59,    61,    59,    55,    55,    56,    10,    55
+       0,     3,     4,    39,    40,    41,    49,     0,    40,     6,
+      15,    18,    22,    43,    45,    46,    47,    49,     5,    19,
+      16,     6,    23,    20,    48,    46,    22,    15,     5,     6,
+       8,     9,    11,    12,    13,    14,    15,    18,    32,    36,
+      42,    44,    48,    49,    50,    51,    53,    54,    55,    23,
+      17,    18,    22,    54,    18,    18,    15,     6,     6,    54,
+       6,    55,    55,    44,    50,     6,    21,    50,    15,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    56,    54,    52,    54,    54,    15,    54,    54,    15,
+      15,    19,    21,    15,    22,    55,    16,    19,    23,    19,
+      19,     5,    54,    17,    56,    51,    51,    23,    54,    54,
+      10,    15,    51
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1486,343 +1502,631 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 29 "parser_gen.y"
-    { printf("Program -> DeclList\n"); ;}
+#line 49 "parser_gen.y"
+    {
+            printf("Program -> DeclList\n");
+            // add to end of stack
+            /*instruction.insert(instruction.end(), $1->begin(), $1->end());*/
+          ;}
     break;
 
   case 3:
-#line 31 "parser_gen.y"
-    { printf("DeclList -> _DeclList DeclList\n"); ;}
+#line 56 "parser_gen.y"
+    {
+              printf("DeclList -> _DeclList DeclList\n");
+              /*instruction.insert(instruction.end(), $1->begin(), $1->end());*/
+           ;}
     break;
 
   case 4:
-#line 32 "parser_gen.y"
-    { printf("\t"); ;}
+#line 60 "parser_gen.y"
+    {;}
     break;
 
   case 5:
-#line 34 "parser_gen.y"
-    { printf("_DeclList -> Type ID Decl\n"); ;}
+#line 63 "parser_gen.y"
+    {
+              printf("_DeclList -> Type ID Decl\n");
+              stack_top += 4;
+              addToScope(*(yyvsp[(2) - (3)].letters), stack_top);
+            ;}
     break;
 
   case 6:
-#line 36 "parser_gen.y"
-    { printf("Decl -> _VarDecl\n"); ;}
+#line 68 "parser_gen.y"
+    {
+              printf("_DeclList -> Type ID [DIGITS];\n");
+              // array declaration
+              stack_top += ( 4 * atoi((*(yyvsp[(4) - (6)].letters)).c_str()) );
+              addToScope(*(yyvsp[(2) - (6)].letters), stack_top);
+            ;}
     break;
 
   case 7:
-#line 37 "parser_gen.y"
-    { printf("Decl -> FunDecl\n"); ;}
+#line 74 "parser_gen.y"
+    {
+              printf("_DeclList -> Type ID FunDecl\n");
+              // TODO
+            ;}
     break;
 
   case 8:
-#line 39 "parser_gen.y"
-    { printf("VarDecl -> Type ID _VarDecl\n"); ;}
+#line 80 "parser_gen.y"
+    {
+            printf("VarDecl -> Type ID;\n");
+            stack_top += 4;
+            addToScope(*(yyvsp[(2) - (3)].letters), stack_top);
+            printf("id added: %s\n", (*(yyvsp[(2) - (3)].letters)).c_str());
+            // keep track of the attributes of the var
+            /* createId(name, type, register, value, isArray); */
+            /* createId($2, $1, tempreg, "", false); */
+          ;}
     break;
 
   case 9:
-#line 41 "parser_gen.y"
-    { printf(";\n"); ;}
+#line 89 "parser_gen.y"
+    {
+            printf("VarDecl -> Type ID [ DIGITS ] ;");
+            stack_top += ( 4 * atoi((*(yyvsp[(4) - (6)].letters)).c_str()) );
+            addToScope(*(yyvsp[(2) - (6)].letters), stack_top);
+            // createId($2, $1, "", "", true);
+          ;}
     break;
 
   case 10:
-#line 42 "parser_gen.y"
-    { printf("_VarDecl -> [ DIGITS ] ;\n"); ;}
+#line 97 "parser_gen.y"
+    {
+          ;}
     break;
 
   case 11:
-#line 44 "parser_gen.y"
-    { printf("FunDecl -> ( ParamDeclList ) Block\n"); ;}
+#line 101 "parser_gen.y"
+    {
+                printf("VarDeclList -> VarDecl VarDeclList\n");
+                (yyvsp[(2) - (2)].code)->insert((yyvsp[(2) - (2)].code)->end(), (yyvsp[(1) - (2)].code)->begin(), (yyvsp[(1) - (2)].code)->end());
+                (yyval.code) = (yyvsp[(2) - (2)].code);
+              ;}
     break;
 
   case 12:
-#line 46 "parser_gen.y"
-    { printf("VarDeclList -> VarDecl VarDeclList\n"); ;}
+#line 106 "parser_gen.y"
+    {
+                printf("VarDeclList -> VarDecl\n");
+                /* new variable declaration */
+                code_section = new Code_frag();
+                (yyval.code) = code_section;
+              ;}
     break;
 
   case 13:
-#line 47 "parser_gen.y"
-    { printf("\t"); ;}
+#line 114 "parser_gen.y"
+    {
+                  printf("ParamDeclList -> ParamDeclListTail\n");
+                  (yyval.code) = (yyvsp[(1) - (1)].code);
+                ;}
     break;
 
   case 14:
-#line 49 "parser_gen.y"
-    { printf("ParamDeclList -> ParamDeclListTail\n"); ;}
+#line 118 "parser_gen.y"
+    {;}
     break;
 
   case 15:
-#line 50 "parser_gen.y"
-    { printf("\t"); ;}
+#line 121 "parser_gen.y"
+    {
+                      printf("ParamDeclListTail -> ParamDecl ParamDeclListTail\n");
+                    ;}
     break;
 
   case 16:
-#line 52 "parser_gen.y"
-    { printf("ParamDeclListTail -> ParamDecl _ParamDeclListTail\n"); ;}
+#line 124 "parser_gen.y"
+    {
+                      printf("ParamDeclListTail -> ParamDecl\n");
+                      code_section = new Code_frag();
+                      code_section->insert(code_section->end(), (yyvsp[(1) - (1)].code)->begin(), (yyvsp[(1) - (1)].code)->end());
+                      (yyval.code) = code_section;
+                  ;}
     break;
 
   case 17:
-#line 54 "parser_gen.y"
-    { printf("_ParamDeclListTail -> , ParamDeclListTail\n"); ;}
+#line 132 "parser_gen.y"
+    {
+              printf("ParamDecl -> Type ID\n");
+              newScope();
+              parameter_count = parameter_count + 1;
+              /* 4 bytes for storing and parameter */
+              stack_top = stack_top + 4;
+              addToScope(*(yyvsp[(2) - (2)].letters), stack_top);
+            ;}
     break;
 
   case 18:
-#line 55 "parser_gen.y"
-    { printf("\t"); ;}
+#line 140 "parser_gen.y"
+    {
+              printf("ParamDecl -> Type ID []");
+              newScope();
+              parameter_count = parameter_count + 1;
+              stack_top = stack_top + 4;
+              addToScope(*(yyvsp[(2) - (4)].letters), stack_top);
+          ;}
     break;
 
   case 19:
-#line 57 "parser_gen.y"
-    { printf("ParamDecl -> Type ID _ParamDecl\n"); ;}
+#line 149 "parser_gen.y"
+    {
+          printf("Block -> { VarDeclList StmtList }\n");
+          // TODO
+        ;}
     break;
 
   case 20:
-#line 59 "parser_gen.y"
-    { printf("_ParamDecl -> []\n"); ;}
+#line 153 "parser_gen.y"
+    {
+          printf("Block -> {StmtList}\n");
+          // TODO
+        ;}
     break;
 
   case 21:
-#line 60 "parser_gen.y"
-    { printf("\t"); ;}
+#line 159 "parser_gen.y"
+    {
+          printf("Type -> int\t");
+       ;}
     break;
 
   case 22:
-#line 62 "parser_gen.y"
-    { printf("Block -> { VarDeclList StmtList }\n"); ;}
+#line 162 "parser_gen.y"
+    {
+          printf("Type -> char\t");
+       ;}
     break;
 
   case 23:
-#line 64 "parser_gen.y"
-    { printf("Type -> int\n"); ;}
+#line 167 "parser_gen.y"
+    {
+              printf("StmtList -> Stmt StmtList\n");
+              (yyvsp[(2) - (2)].code)->insert((yyvsp[(2) - (2)].code)->end(), (yyvsp[(1) - (2)].code)->begin(), (yyvsp[(1) - (2)].code)->end());
+              (yyval.code) = (yyvsp[(2) - (2)].code);
+           ;}
     break;
 
   case 24:
-#line 65 "parser_gen.y"
-    { printf("Type -> char\n"); ;}
+#line 172 "parser_gen.y"
+    {
+              printf("StmtList -> Stmt\n");
+              code_section = new Code_frag();
+              /* add a new Stmt */
+              code_section->insert(code_section->end(), (yyvsp[(1) - (1)].code)->begin(), (yyvsp[(1) - (1)].code)->end());
+              (yyval.code) = code_section;
+           ;}
     break;
 
   case 25:
-#line 67 "parser_gen.y"
-    { printf("StmtList -> Stmt _StmtList\n"); ;}
+#line 181 "parser_gen.y"
+    { /* don't need to do anything for ';' */ ;}
     break;
 
   case 26:
-#line 69 "parser_gen.y"
-    { printf("_StmtList -> StmtList\n"); ;}
+#line 182 "parser_gen.y"
+    {
+          printf("Stmt -> Expr ;\n");
+          /* Stmt is assigned an Expr */
+          code_section = new Code_frag();
+          code_section->insert(code_section->end(), code_expr.begin(), code_expr.end());
+          /* clean the vector */
+          code_expr.clear();
+          (yyval.code) = code_section;
+          cleanSingleRegister(*(yyvsp[(1) - (2)].letters));
+       ;}
     break;
 
   case 27:
-#line 70 "parser_gen.y"
-    { printf("\t"); ;}
+#line 192 "parser_gen.y"
+    {
+          printf("Stmt -> return Expr ;\n");
+          code_section = new Code_frag();
+          code_section->insert(code_section->end(), code_expr.begin(), code_expr.end());
+          /* always save Expr in saved register */
+          /* clean the vector */
+          code_expr.clear();
+          (yyval.code) = code_section;
+       ;}
     break;
 
   case 28:
-#line 72 "parser_gen.y"
-    { printf("Stmt -> ;\n"); ;}
+#line 201 "parser_gen.y"
+    {
+          // TODO
+          printf("Stmt -> break ;\n");
+       ;}
     break;
 
   case 29:
-#line 73 "parser_gen.y"
-    { printf("Stmt -> Expr ;\n"); ;}
+#line 205 "parser_gen.y"
+    {
+          // TODO
+          printf("Stmt -> if (Expr) Stmt else Stmt\n");
+       ;}
     break;
 
   case 30:
-#line 74 "parser_gen.y"
-    { printf("Stmt -> return Expr ;\n"); ;}
+#line 209 "parser_gen.y"
+    {
+          // TODO
+          printf("Stmt -> while (Expr) Stmt\n");
+       ;}
     break;
 
   case 31:
-#line 75 "parser_gen.y"
-    { printf("Stmt -> break ;\n"); ;}
+#line 213 "parser_gen.y"
+    {
+          // TODO
+          printf("Stmt -> Block\n");
+       ;}
     break;
 
   case 32:
-#line 76 "parser_gen.y"
-    { printf("Stmt -> if (Expr) Stmt else Stmt\n"); ;}
+#line 217 "parser_gen.y"
+    {
+          /* // print out ID using temp register --> need to load the value
+          // code_section = new Code_frag();
+          // load register from variables:
+          // tempreg = getVarRegister($2);
+          // move before printing
+          // string temp = "\tmove $a0, ";
+          // temp = temp + tempreg;
+          // code_section->push_back(temp); */
+          printf("Stmt -> print ID;\n");
+          tempreg = getTempReg();
+          reg_ptr = new string(tempreg);
+          string temp1 = "\tlw $";
+          temp1 = temp1 + *reg_ptr;
+          temp1 = temp1 + ", -";
+          temp1 = temp1 + to_string(getOffset(*(yyvsp[(2) - (3)].letters))) + "($fp)";
+          // code_section->push_back(temp1);
+          instruction.push_back(temp1);
+
+          temp1 = "\tmove $a0, $" + *reg_ptr;
+          // move to $a0 to print
+          // code_section->push_back(temp1);
+          instruction.push_back(temp1);
+
+          // print id as string
+          // code_section->push_back("\tli $v0, 1");
+          // code_section->push_back("\tsyscall");
+          instruction.push_back("\tli $v0, 1");
+          instruction.push_back("\tsyscall");
+
+          (yyval.code) = code_section;
+          // make register unused again
+          cleanSingleRegister(tempreg);
+          cleanSingleRegister(*(yyvsp[(2) - (3)].letters));
+       ;}
     break;
 
   case 33:
-#line 77 "parser_gen.y"
-    { printf("Stmt -> while (Expr) Stmt\n"); ;}
+#line 252 "parser_gen.y"
+    {
+          printf("Stmt -> read ID;\n");
+          /* read ID --> need to write value only id for integers */
+          code_section = new Code_frag();
+          /* read out from reg */
+          tempreg = getTempReg();
+          reg_ptr = new string(tempreg);
+          string prefix = "\tsw $v0, $";
+          string action = prefix + to_string(getOffset(*(yyvsp[(2) - (3)].letters))) + "($fp)";
+          /*code_section->push_back("\tli $v0, 5");
+          code_section->push_back("\tsyscall");
+          code_section->push_back(action);
+          code_section->insert(code_section->end(), code_expr.begin(), code_expr.end());*/
+
+          instruction.push_back("\tli $v0, 5");
+          instruction.push_back("\tsyscall");
+          instruction.push_back(action);
+
+          (yyval.code) = code_section;
+          cleanSingleRegister(tempreg);
+          cleanSingleRegister(*(yyvsp[(2) - (3)].letters));
+       ;}
     break;
 
   case 34:
-#line 78 "parser_gen.y"
-    { printf("Stmt -> Block\n"); ;}
+#line 276 "parser_gen.y"
+    {
+              printf("ExprList -> Expr\n");
+           ;}
     break;
 
   case 35:
-#line 79 "parser_gen.y"
-    { printf("Stmt -> print ID ;\n"); ;}
+#line 279 "parser_gen.y"
+    {
+              /* ExprList, Expr .....  */
+           ;}
     break;
 
   case 36:
-#line 80 "parser_gen.y"
-    { printf("Stmt -> read ID ;\n"); ;}
+#line 284 "parser_gen.y"
+    {
+          printf("ID\t");
+          tempreg = getTempReg();
+          reg_ptr = new string(tempreg);
+          string prefix = "\tlw $";
+          string action = prefix + *reg_ptr + ", -" + to_string(getOffset(*(yyvsp[(1) - (1)].letters))) + "($fp)";
+          /*code_expr.push_back(action);*/
+          instruction.push_back(action);
+          (yyval.letters) = reg_ptr;
+       ;}
     break;
 
   case 37:
-#line 82 "parser_gen.y"
-    { printf("Expr -> UnaryOp Expr\n"); ;}
+#line 294 "parser_gen.y"
+    {
+          printf("num\t");
+          tempreg = getTempReg();
+          reg_ptr = new string(tempreg);
+          string prefix = "\tli $";
+          string action = prefix + *reg_ptr + ", $" + *(yyvsp[(1) - (1)].letters);
+          /*code_expr.push_back(action);*/
+          instruction.push_back(action);
+          (yyval.letters) = (yyvsp[(1) - (1)].letters);
+       ;}
     break;
 
   case 38:
-#line 83 "parser_gen.y"
-    { printf("Expr -> DIGITS _Expr\n"); ;}
+#line 306 "parser_gen.y"
+    {
+          printf("Expr -> ID = Expr\n");
+          string prefix = "\tsw $";
+          /* get id offset in the stack and store the word in it */
+          string action = prefix + *(yyvsp[(3) - (3)].letters) + ", -" + to_string(getOffset(*(yyvsp[(1) - (3)].letters))) + "($fp)";
+          /*code_expr.push_back(action);*/
+          instruction.push_back(action);
+       ;}
     break;
 
   case 39:
-#line 84 "parser_gen.y"
-    { printf("Expr -> (Expr) _Expr\n"); ;}
+#line 314 "parser_gen.y"
+    {
+          /* TODO: deal with Arrays */
+          printf("Expr -> ID [Expr] BinaryOp Expr\n");
+       ;}
     break;
 
   case 40:
-#line 85 "parser_gen.y"
-    { printf("Expr -> ID ExprIdTail\n"); ;}
+#line 318 "parser_gen.y"
+    {
+          /* TODO: deal with Arrays */
+          printf("Expr -> ID [Expr]\n");
+       ;}
     break;
 
   case 41:
-#line 86 "parser_gen.y"
-    { printf("Expr -> CHARS _Expr\n"); ;}
+#line 322 "parser_gen.y"
+    {
+          /* TODO: array... */
+       ;}
     break;
 
   case 42:
-#line 88 "parser_gen.y"
-    { printf("ExprIdTail -> _Expr\n"); ;}
-    break;
+#line 325 "parser_gen.y"
+    {
 
-  case 43:
-#line 89 "parser_gen.y"
-    { printf("ExprIdTail -> (ExprList) _Expr\n"); ;}
+       ;}
     break;
 
   case 44:
-#line 90 "parser_gen.y"
-    { printf("ExprIdTail -> [Expr] ExprArrayTail\n"); ;}
+#line 331 "parser_gen.y"
+    { (yyval.letters) = (yyvsp[(1) - (1)].letters); ;}
     break;
 
   case 45:
-#line 91 "parser_gen.y"
-    { printf("Expr -> = Expr\n"); ;}
+#line 332 "parser_gen.y"
+    {
+                printf("Operation -> (Operation)\n");
+                (yyval.letters) = (yyvsp[(2) - (3)].letters);
+            ;}
     break;
 
   case 46:
-#line 93 "parser_gen.y"
-    { printf("ExprArrayTail -> _Expr\n"); ;}
+#line 336 "parser_gen.y"
+    {
+              printf("Operation -> Operation BinaryOp Operation\n");
+              string arithmetic_prefix = correspondOp(*(yyvsp[(2) - (3)].letters));
+              // result stored in operation ($3)
+              string action = "";
+              if(kindOfOperator.compare("==") == 0 || kindOfOperator.compare("!=") == 0 | kindOfOperator.compare("<") == 0 | kindOfOperator.compare("<=") == 0 | kindOfOperator.compare(">") == 0 | kindOfOperator.compare(">=") == 0 | kindOfOperator.compare("&&") == 0 | kindOfOperator.compare("||") == 0) {
+                  // have to store value into new register if using ==, !=, <, <=, >, >=, &&, ||
+                  tempreg = getTempReg();
+                  reg_ptr = new string(tempreg);
+                  action = arithmetic_prefix + *reg_ptr + ", $" + *(yyvsp[(1) - (3)].letters) + ", $" + *(yyvsp[(3) - (3)].letters);
+                  /*code_expr.push_back(action);*/
+                  instruction.push_back(action);
+                  (yyval.letters) = reg_ptr;
+               } else {
+                  action = arithmetic_prefix + *(yyvsp[(1) - (3)].letters) + ", $" + *(yyvsp[(1) - (3)].letters) + ", $" + *(yyvsp[(3) - (3)].letters);
+                  /*code_expr.push_back(action);*/
+                  instruction.push_back(action);
+                  (yyval.letters) = (yyvsp[(1) - (3)].letters);
+               }
+               cleanSingleRegister(*(yyvsp[(3) - (3)].letters));
+            ;}
     break;
 
   case 47:
-#line 94 "parser_gen.y"
-    { printf("ExprArrayTail -> = Expr\n"); ;}
+#line 357 "parser_gen.y"
+    {
+               printf("-Operation");
+               /* this should be NEG token */
+               string a = "\tneg ";
+               string action = a + *(yyvsp[(2) - (2)].letters) + ", $" + *(yyvsp[(2) - (2)].letters);
+               /*code_expr.push_back(action);*/
+               instruction.push_back(action);
+               (yyval.letters) = (yyvsp[(2) - (2)].letters);
+               // return $2 back
+            ;}
     break;
 
   case 48:
-#line 96 "parser_gen.y"
-    { printf("_Expr -> BinaryOp Expr\n"); ;}
+#line 367 "parser_gen.y"
+    {
+               printf("!Operation\n");
+               /* printf(" ! "); */
+               string a = "\tnot $";
+               /* not command */
+               string action = a + *(yyvsp[(2) - (2)].letters) + ", $" + *(yyvsp[(2) - (2)].letters);
+               /*code_expr.push_back(action);*/
+               instruction.push_back(action);
+               (yyval.letters) = (yyvsp[(2) - (2)].letters);
+            ;}
     break;
 
   case 49:
-#line 97 "parser_gen.y"
-    { printf("\t"); ;}
+#line 379 "parser_gen.y"
+    {
+              /* printf(" + "); */
+              /* fp << "\tadd " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              // op_stack.push_back(*$1);
+              kindOfOperator = "+";
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 50:
-#line 99 "parser_gen.y"
-    { printf("ExprList -> ExprListTail\n"); ;}
+#line 387 "parser_gen.y"
+    {
+              printf(" - ");
+              /* fp << "\tsub " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "-";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 51:
-#line 100 "parser_gen.y"
-    { printf("\t"); ;}
+#line 395 "parser_gen.y"
+    {
+              /* printf(" * "); */
+              /* fp << "\tmul " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "*";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 52:
-#line 102 "parser_gen.y"
-    { printf("ExprListTail -> Expr _ExprListTail\n"); ;}
+#line 403 "parser_gen.y"
+    {
+              /* printf(" / "); */
+              /* fp << "\tdiv " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "/";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 53:
-#line 104 "parser_gen.y"
-    { printf("_ExprListTail -> , ExprListTail\n"); ;}
+#line 411 "parser_gen.y"
+    {
+              /* printf(" == "); */
+              /* fp << "\tseq " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "==";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 54:
-#line 105 "parser_gen.y"
-    { printf("\t"); ;}
+#line 419 "parser_gen.y"
+    {
+              /* printf(" != "); */
+              /* fp << "\tsne " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "!=";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 55:
-#line 107 "parser_gen.y"
-    { printf(" - "); ;}
+#line 427 "parser_gen.y"
+    {
+              /* printf(" < "); */
+              /* fp << "\tslt " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "<";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 56:
-#line 108 "parser_gen.y"
-    { printf(" ! "); ;}
+#line 435 "parser_gen.y"
+    {
+              /* printf(" <= "); */
+              /* fp << "\tlte " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "<=";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 57:
-#line 110 "parser_gen.y"
-    { printf(" + "); ;}
+#line 443 "parser_gen.y"
+    {
+              /* printf(" > "); */
+              /* fp << "\tlgt " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = ">";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 58:
-#line 111 "parser_gen.y"
-    { printf(" - "); ;}
+#line 451 "parser_gen.y"
+    {
+              /* printf(" >= "); */
+              /* fp << "\tlge " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = ">=";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 59:
-#line 112 "parser_gen.y"
-    { printf(" * "); ;}
+#line 459 "parser_gen.y"
+    {
+              /* printf(" && "); */
+              /* fp << "\tand " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "&&";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
   case 60:
-#line 113 "parser_gen.y"
-    { printf(" / "); ;}
-    break;
-
-  case 61:
-#line 114 "parser_gen.y"
-    { printf(" == "); ;}
-    break;
-
-  case 62:
-#line 115 "parser_gen.y"
-    { printf(" != "); ;}
-    break;
-
-  case 63:
-#line 116 "parser_gen.y"
-    { printf(" < "); ;}
-    break;
-
-  case 64:
-#line 117 "parser_gen.y"
-    { printf(" <= "); ;}
-    break;
-
-  case 65:
-#line 118 "parser_gen.y"
-    { printf(" > "); ;}
-    break;
-
-  case 66:
-#line 119 "parser_gen.y"
-    { printf(" >= "); ;}
-    break;
-
-  case 67:
-#line 120 "parser_gen.y"
-    { printf(" && "); ;}
-    break;
-
-  case 68:
-#line 121 "parser_gen.y"
-    { printf(" || "); ;}
+#line 467 "parser_gen.y"
+    {
+              /* printf(" || "); */
+              /* fp << "\tor " << "$t0, " << "$t1, " << "$t2"; */
+              /* track the operator */
+              kindOfOperator = "||";
+              // op_stack.push_back(*$1);
+              (yyval.letters) = (yyvsp[(1) - (1)].letters);
+           ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1826 "parser_gen.tab.c"
+#line 2130 "parser_gen.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2036,17 +2340,36 @@ yyreturn:
 }
 
 
-#line 124 "parser_gen.y"
+#line 477 "parser_gen.y"
 
+#include <cstdio>
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <string>
+#include <vector>
+#include <ctype.h>
 
 void yyerror(const char *err) {
-  cout << "line " << yylineno << ": " << err << endl;
+  cout << "line " << yylineno << ": " << err << "token: " << &yylex << endl;
 }
 
 int main(int argc, char *argv[]) {
   yyin = fopen(argv[1], "r");
-  yyparse();
+  //FILE *fp = fopen("code_gen.s", "w");
+  ofstream fp("code_gen.s", ios::out);
+  initialize();
+  if(yyparse()) {
+    fprintf(stderr, "parsing error!\n");
+  } else {
+    // can parse and print into .s
+    fp << "main:" << endl;
+    for(int i = 0; i< instruction.size(); i++) {
+      fp << instruction[i] << endl;
+    }
+  }
   fclose(yyin);
+  fp.close();
   return 0;
 }
 

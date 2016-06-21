@@ -53,26 +53,27 @@
      READ = 269,
      SEMI = 270,
      COMMA = 271,
-     RS = 272,
-     LS = 273,
-     RB = 274,
+     ASSIGN = 272,
+     LP = 273,
+     RP = 274,
      LB = 275,
-     RP = 276,
-     LP = 277,
-     OR = 278,
-     AND = 279,
-     GE = 280,
-     LE = 281,
-     GT = 282,
-     LT = 283,
-     NE = 284,
-     EQ = 285,
-     DIVIDE = 286,
-     MULT = 287,
-     ASSIGN = 288,
-     NOT = 289,
-     MINUS = 290,
-     PLUS = 291
+     RB = 276,
+     LS = 277,
+     RS = 278,
+     OR = 279,
+     AND = 280,
+     GE = 281,
+     LE = 282,
+     GT = 283,
+     LT = 284,
+     NE = 285,
+     EQ = 286,
+     MINUS = 287,
+     PLUS = 288,
+     DIVIDE = 289,
+     MULT = 290,
+     NOT = 291,
+     NEG = 292
    };
 #endif
 /* Tokens.  */
@@ -90,39 +91,40 @@
 #define READ 269
 #define SEMI 270
 #define COMMA 271
-#define RS 272
-#define LS 273
-#define RB 274
+#define ASSIGN 272
+#define LP 273
+#define RP 274
 #define LB 275
-#define RP 276
-#define LP 277
-#define OR 278
-#define AND 279
-#define GE 280
-#define LE 281
-#define GT 282
-#define LT 283
-#define NE 284
-#define EQ 285
-#define DIVIDE 286
-#define MULT 287
-#define ASSIGN 288
-#define NOT 289
-#define MINUS 290
-#define PLUS 291
+#define RB 276
+#define LS 277
+#define RS 278
+#define OR 279
+#define AND 280
+#define GE 281
+#define LE 282
+#define GT 283
+#define LT 284
+#define NE 285
+#define EQ 286
+#define MINUS 287
+#define PLUS 288
+#define DIVIDE 289
+#define MULT 290
+#define NOT 291
+#define NEG 292
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 9 "parser_gen.y"
+#line 24 "parser_gen.y"
 {
-  std::vector <std::string> *code;
-  std::string *letters;
+  vector<string> *code;
+  string *letters;
 }
 /* Line 1529 of yacc.c.  */
-#line 126 "parser_gen.tab.h"
+#line 128 "parser_gen.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

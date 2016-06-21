@@ -33,8 +33,6 @@ int idMain ( ) {
         print idResult ;
     }
 
-    idChar = "charrrrr" ;
-
     //  testing document
     idLoop = 10;
     while ( idLoop > 0) {

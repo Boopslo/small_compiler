@@ -1,3 +1,11 @@
+Terminals which are not used
+
+   CHARS
+
+
+State 95 conflicts: 12 shift/reduce
+
+
 Grammar
 
     0 $accept: Program $end
@@ -7,195 +15,161 @@ Grammar
     2 DeclList: _DeclList DeclList
     3         | /* empty */
 
-    4 _DeclList: Type ID Decl
+    4 _DeclList: Type ID SEMI
+    5          | Type ID LS DIGITS RS SEMI
+    6          | Type ID FunDecl
 
-    5 Decl: _VarDecl
-    6     | FunDecl
+    7 VarDecl: Type ID SEMI
+    8        | Type ID LS DIGITS RS SEMI
 
-    7 VarDecl: Type ID _VarDecl
+    9 FunDecl: LP ParamDeclList RP Block
 
-    8 _VarDecl: SEMI
-    9         | LS DIGITS RS SEMI
+   10 VarDeclList: VarDecl VarDeclList
+   11            | VarDecl
 
-   10 FunDecl: LP ParamDeclList RP Block
+   12 ParamDeclList: ParamDeclListTail
+   13              | /* empty */
 
-   11 VarDeclList: VarDecl VarDeclList
-   12            | /* empty */
+   14 ParamDeclListTail: ParamDecl COMMA ParamDeclListTail
+   15                  | ParamDecl
 
-   13 ParamDeclList: ParamDeclListTail
-   14              | /* empty */
+   16 ParamDecl: Type ID
+   17          | Type ID LS RS
 
-   15 ParamDeclListTail: ParamDecl _ParamDeclListTail
+   18 Block: LB VarDeclList StmtList RB
+   19      | LB StmtList RB
 
-   16 _ParamDeclListTail: COMMA ParamDeclListTail
-   17                   | /* empty */
+   20 Type: INT
+   21     | CHAR
 
-   18 ParamDecl: Type ID _ParamDecl
+   22 StmtList: Stmt StmtList
+   23         | Stmt
 
-   19 _ParamDecl: LS RS
-   20           | /* empty */
+   24 Stmt: SEMI
+   25     | Expr SEMI
+   26     | RETURN Expr SEMI
+   27     | BREAK SEMI
+   28     | IF LP Expr RP Stmt ELSE Stmt
+   29     | WHILE LP Expr RP Stmt
+   30     | Block
+   31     | PRINT ID SEMI
+   32     | READ ID SEMI
 
-   21 Block: LB VarDeclList StmtList RB
+   33 ExprList: Expr
+   34         | ExprList COMMA Expr
 
-   22 Type: INT
-   23     | CHAR
+   35 Node: ID
+   36     | DIGITS
 
-   24 StmtList: Stmt _StmtList
+   37 Expr: ID ASSIGN Expr
+   38     | ID LS Expr RS BinaryOp Expr
+   39     | ID LS Expr RS
+   40     | ID LS Expr RS ASSIGN Expr
+   41     | ID LP ExprList RP
+   42     | Operation
 
-   25 _StmtList: StmtList
-   26          | /* empty */
+   43 Operation: Node
+   44          | LP Expr RP
+   45          | Operation BinaryOp Operation
+   46          | MINUS Operation
+   47          | NOT Operation
 
-   27 Stmt: SEMI
-   28     | Expr SEMI
-   29     | RETURN Expr SEMI
-   30     | BREAK SEMI
-   31     | IF LP Expr RP Stmt ELSE Stmt
-   32     | WHILE LP Expr RP Stmt
-   33     | Block
-   34     | PRINT ID SEMI
-   35     | READ ID SEMI
-
-   36 Expr: UnaryOp Expr
-   37     | DIGITS _Expr
-   38     | LP Expr RP _Expr
-   39     | ID ExprIdTail
-   40     | CHARS _Expr
-
-   41 ExprIdTail: _Expr
-   42           | LP ExprList RP _Expr
-   43           | LS Expr RS ExprArrayTail
-   44           | ASSIGN Expr
-
-   45 ExprArrayTail: _Expr
-   46              | ASSIGN Expr
-
-   47 _Expr: BinaryOp Expr
-   48      | /* empty */
-
-   49 ExprList: ExprListTail
-   50         | /* empty */
-
-   51 ExprListTail: Expr _ExprListTail
-
-   52 _ExprListTail: COMMA ExprListTail
-   53              | /* empty */
-
-   54 UnaryOp: MINUS
-   55        | NOT
-
-   56 BinaryOp: PLUS
-   57         | MINUS
-   58         | MULT
-   59         | DIVIDE
-   60         | EQ
-   61         | NE
-   62         | LT
-   63         | LE
-   64         | GT
-   65         | GE
-   66         | AND
-   67         | OR
+   48 BinaryOp: PLUS
+   49         | MINUS
+   50         | MULT
+   51         | DIVIDE
+   52         | EQ
+   53         | NE
+   54         | LT
+   55         | LE
+   56         | GT
+   57         | GE
+   58         | AND
+   59         | OR
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
 error (256)
-INT (258) 22
-CHAR (259) 23
-DIGITS (260) 9 37
-ID (261) 4 7 18 34 35 39
-CHARS (262) 40
-RETURN (263) 29
-IF (264) 31
-ELSE (265) 31
-WHILE (266) 32
-BREAK (267) 30
-PRINT (268) 34
-READ (269) 35
-SEMI (270) 8 9 27 28 29 30 34 35
-COMMA (271) 16 52
-RS (272) 9 19 43
-LS (273) 9 19 43
-RB (274) 21
-LB (275) 21
-RP (276) 10 31 32 38 42
-LP (277) 10 31 32 38 42
-OR (278) 67
-AND (279) 66
-GE (280) 65
-LE (281) 63
-GT (282) 64
-LT (283) 62
-NE (284) 61
-EQ (285) 60
-DIVIDE (286) 59
-MULT (287) 58
-ASSIGN (288) 44 46
-NOT (289) 55
-MINUS (290) 54 57
-PLUS (291) 56
+INT (258) 20
+CHAR (259) 21
+DIGITS (260) 5 8 36
+ID (261) 4 5 6 7 8 16 17 31 32 35 37 38 39 40 41
+CHARS (262)
+RETURN (263) 26
+IF (264) 28
+ELSE (265) 28
+WHILE (266) 29
+BREAK (267) 27
+PRINT (268) 31
+READ (269) 32
+SEMI (270) 4 5 7 8 24 25 26 27 31 32
+COMMA (271) 14 34
+ASSIGN (272) 37 40
+LP (273) 9 28 29 41 44
+RP (274) 9 28 29 41 44
+LB (275) 18 19
+RB (276) 18 19
+LS (277) 5 8 17 38 39 40
+RS (278) 5 8 17 38 39 40
+OR (279) 59
+AND (280) 58
+GE (281) 57
+LE (282) 55
+GT (283) 56
+LT (284) 54
+NE (285) 53
+EQ (286) 52
+MINUS (287) 46 49
+PLUS (288) 48
+DIVIDE (289) 51
+MULT (290) 50
+NOT (291) 47
+NEG (292)
 
 
 Nonterminals, with rules where they appear
 
-$accept (37)
+$accept (38)
     on left: 0
-Program (38)
+Program (39)
     on left: 1, on right: 0
-DeclList (39)
+DeclList (40)
     on left: 2 3, on right: 1 2
-_DeclList (40)
-    on left: 4, on right: 2
-Decl (41)
-    on left: 5 6, on right: 4
+_DeclList (41)
+    on left: 4 5 6, on right: 2
 VarDecl (42)
-    on left: 7, on right: 11
-_VarDecl (43)
-    on left: 8 9, on right: 5 7
-FunDecl (44)
-    on left: 10, on right: 6
-VarDeclList (45)
-    on left: 11 12, on right: 11 21
-ParamDeclList (46)
-    on left: 13 14, on right: 10
-ParamDeclListTail (47)
-    on left: 15, on right: 13 16
-_ParamDeclListTail (48)
-    on left: 16 17, on right: 15
-ParamDecl (49)
-    on left: 18, on right: 15
-_ParamDecl (50)
-    on left: 19 20, on right: 18
-Block (51)
-    on left: 21, on right: 10 33
-Type (52)
-    on left: 22 23, on right: 4 7 18
-StmtList (53)
-    on left: 24, on right: 21 25
-_StmtList (54)
-    on left: 25 26, on right: 24
-Stmt (55)
-    on left: 27 28 29 30 31 32 33 34 35, on right: 24 31 32
-Expr (56)
-    on left: 36 37 38 39 40, on right: 28 29 31 32 36 38 43 44 46 47
-    51
-ExprIdTail (57)
-    on left: 41 42 43 44, on right: 39
-ExprArrayTail (58)
-    on left: 45 46, on right: 43
-_Expr (59)
-    on left: 47 48, on right: 37 38 40 41 42 45
-ExprList (60)
-    on left: 49 50, on right: 42
-ExprListTail (61)
-    on left: 51, on right: 49 52
-_ExprListTail (62)
-    on left: 52 53, on right: 51
-UnaryOp (63)
-    on left: 54 55, on right: 36
-BinaryOp (64)
-    on left: 56 57 58 59 60 61 62 63 64 65 66 67, on right: 47
+    on left: 7 8, on right: 10 11
+FunDecl (43)
+    on left: 9, on right: 6
+VarDeclList (44)
+    on left: 10 11, on right: 10 18
+ParamDeclList (45)
+    on left: 12 13, on right: 9
+ParamDeclListTail (46)
+    on left: 14 15, on right: 12 14
+ParamDecl (47)
+    on left: 16 17, on right: 14 15
+Block (48)
+    on left: 18 19, on right: 9 30
+Type (49)
+    on left: 20 21, on right: 4 5 6 7 8 16 17
+StmtList (50)
+    on left: 22 23, on right: 18 19 22
+Stmt (51)
+    on left: 24 25 26 27 28 29 30 31 32, on right: 22 23 28 29
+ExprList (52)
+    on left: 33 34, on right: 34 41
+Node (53)
+    on left: 35 36, on right: 43
+Expr (54)
+    on left: 37 38 39 40 41 42, on right: 25 26 28 29 33 34 37 38 39
+    40 44
+Operation (55)
+    on left: 43 44 45 46 47, on right: 42 45 46 47
+BinaryOp (56)
+    on left: 48 49 50 51 52 53 54 55 56 57 58 59, on right: 38 45
 
 
 state 0
@@ -215,16 +189,16 @@ state 0
 
 state 1
 
-   22 Type: INT .
+   20 Type: INT .
 
-    $default  reduce using rule 22 (Type)
+    $default  reduce using rule 20 (Type)
 
 
 state 2
 
-   23 Type: CHAR .
+   21 Type: CHAR .
 
-    $default  reduce using rule 23 (Type)
+    $default  reduce using rule 21 (Type)
 
 
 state 3
@@ -257,7 +231,9 @@ state 5
 
 state 6
 
-    4 _DeclList: Type . ID Decl
+    4 _DeclList: Type . ID SEMI
+    5          | Type . ID LS DIGITS RS SEMI
+    6          | Type . ID FunDecl
 
     ID  shift, and go to state 9
 
@@ -278,1102 +254,1071 @@ state 8
 
 state 9
 
-    4 _DeclList: Type ID . Decl
+    4 _DeclList: Type ID . SEMI
+    5          | Type ID . LS DIGITS RS SEMI
+    6          | Type ID . FunDecl
 
     SEMI  shift, and go to state 10
-    LS    shift, and go to state 11
-    LP    shift, and go to state 12
+    LP    shift, and go to state 11
+    LS    shift, and go to state 12
 
-    Decl      go to state 13
-    _VarDecl  go to state 14
-    FunDecl   go to state 15
+    FunDecl  go to state 13
 
 
 state 10
 
-    8 _VarDecl: SEMI .
-
-    $default  reduce using rule 8 (_VarDecl)
-
-
-state 11
-
-    9 _VarDecl: LS . DIGITS RS SEMI
-
-    DIGITS  shift, and go to state 16
-
-
-state 12
-
-   10 FunDecl: LP . ParamDeclList RP Block
-
-    INT   shift, and go to state 1
-    CHAR  shift, and go to state 2
-
-    $default  reduce using rule 14 (ParamDeclList)
-
-    ParamDeclList      go to state 17
-    ParamDeclListTail  go to state 18
-    ParamDecl          go to state 19
-    Type               go to state 20
-
-
-state 13
-
-    4 _DeclList: Type ID Decl .
+    4 _DeclList: Type ID SEMI .
 
     $default  reduce using rule 4 (_DeclList)
 
 
+state 11
+
+    9 FunDecl: LP . ParamDeclList RP Block
+
+    INT   shift, and go to state 1
+    CHAR  shift, and go to state 2
+
+    $default  reduce using rule 13 (ParamDeclList)
+
+    ParamDeclList      go to state 14
+    ParamDeclListTail  go to state 15
+    ParamDecl          go to state 16
+    Type               go to state 17
+
+
+state 12
+
+    5 _DeclList: Type ID LS . DIGITS RS SEMI
+
+    DIGITS  shift, and go to state 18
+
+
+state 13
+
+    6 _DeclList: Type ID FunDecl .
+
+    $default  reduce using rule 6 (_DeclList)
+
+
 state 14
 
-    5 Decl: _VarDecl .
+    9 FunDecl: LP ParamDeclList . RP Block
 
-    $default  reduce using rule 5 (Decl)
+    RP  shift, and go to state 19
 
 
 state 15
 
-    6 Decl: FunDecl .
+   12 ParamDeclList: ParamDeclListTail .
 
-    $default  reduce using rule 6 (Decl)
+    $default  reduce using rule 12 (ParamDeclList)
 
 
 state 16
 
-    9 _VarDecl: LS DIGITS . RS SEMI
+   14 ParamDeclListTail: ParamDecl . COMMA ParamDeclListTail
+   15                  | ParamDecl .
 
-    RS  shift, and go to state 21
-
-
-state 17
-
-   10 FunDecl: LP ParamDeclList . RP Block
-
-    RP  shift, and go to state 22
-
-
-state 18
-
-   13 ParamDeclList: ParamDeclListTail .
-
-    $default  reduce using rule 13 (ParamDeclList)
-
-
-state 19
-
-   15 ParamDeclListTail: ParamDecl . _ParamDeclListTail
-
-    COMMA  shift, and go to state 23
-
-    $default  reduce using rule 17 (_ParamDeclListTail)
-
-    _ParamDeclListTail  go to state 24
-
-
-state 20
-
-   18 ParamDecl: Type . ID _ParamDecl
-
-    ID  shift, and go to state 25
-
-
-state 21
-
-    9 _VarDecl: LS DIGITS RS . SEMI
-
-    SEMI  shift, and go to state 26
-
-
-state 22
-
-   10 FunDecl: LP ParamDeclList RP . Block
-
-    LB  shift, and go to state 27
-
-    Block  go to state 28
-
-
-state 23
-
-   16 _ParamDeclListTail: COMMA . ParamDeclListTail
-
-    INT   shift, and go to state 1
-    CHAR  shift, and go to state 2
-
-    ParamDeclListTail  go to state 29
-    ParamDecl          go to state 19
-    Type               go to state 20
-
-
-state 24
-
-   15 ParamDeclListTail: ParamDecl _ParamDeclListTail .
+    COMMA  shift, and go to state 20
 
     $default  reduce using rule 15 (ParamDeclListTail)
 
 
+state 17
+
+   16 ParamDecl: Type . ID
+   17          | Type . ID LS RS
+
+    ID  shift, and go to state 21
+
+
+state 18
+
+    5 _DeclList: Type ID LS DIGITS . RS SEMI
+
+    RS  shift, and go to state 22
+
+
+state 19
+
+    9 FunDecl: LP ParamDeclList RP . Block
+
+    LB  shift, and go to state 23
+
+    Block  go to state 24
+
+
+state 20
+
+   14 ParamDeclListTail: ParamDecl COMMA . ParamDeclListTail
+
+    INT   shift, and go to state 1
+    CHAR  shift, and go to state 2
+
+    ParamDeclListTail  go to state 25
+    ParamDecl          go to state 16
+    Type               go to state 17
+
+
+state 21
+
+   16 ParamDecl: Type ID .
+   17          | Type ID . LS RS
+
+    LS  shift, and go to state 26
+
+    $default  reduce using rule 16 (ParamDecl)
+
+
+state 22
+
+    5 _DeclList: Type ID LS DIGITS RS . SEMI
+
+    SEMI  shift, and go to state 27
+
+
+state 23
+
+   18 Block: LB . VarDeclList StmtList RB
+   19      | LB . StmtList RB
+
+    INT     shift, and go to state 1
+    CHAR    shift, and go to state 2
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    RETURN  shift, and go to state 30
+    IF      shift, and go to state 31
+    WHILE   shift, and go to state 32
+    BREAK   shift, and go to state 33
+    PRINT   shift, and go to state 34
+    READ    shift, and go to state 35
+    SEMI    shift, and go to state 36
+    LP      shift, and go to state 37
+    LB      shift, and go to state 23
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    VarDecl      go to state 40
+    VarDeclList  go to state 41
+    Block        go to state 42
+    Type         go to state 43
+    StmtList     go to state 44
+    Stmt         go to state 45
+    Node         go to state 46
+    Expr         go to state 47
+    Operation    go to state 48
+
+
+state 24
+
+    9 FunDecl: LP ParamDeclList RP Block .
+
+    $default  reduce using rule 9 (FunDecl)
+
+
 state 25
 
-   18 ParamDecl: Type ID . _ParamDecl
+   14 ParamDeclListTail: ParamDecl COMMA ParamDeclListTail .
 
-    LS  shift, and go to state 30
-
-    $default  reduce using rule 20 (_ParamDecl)
-
-    _ParamDecl  go to state 31
+    $default  reduce using rule 14 (ParamDeclListTail)
 
 
 state 26
 
-    9 _VarDecl: LS DIGITS RS SEMI .
+   17 ParamDecl: Type ID LS . RS
 
-    $default  reduce using rule 9 (_VarDecl)
+    RS  shift, and go to state 49
 
 
 state 27
 
-   21 Block: LB . VarDeclList StmtList RB
+    5 _DeclList: Type ID LS DIGITS RS SEMI .
 
-    INT   shift, and go to state 1
-    CHAR  shift, and go to state 2
-
-    $default  reduce using rule 12 (VarDeclList)
-
-    VarDecl      go to state 32
-    VarDeclList  go to state 33
-    Type         go to state 34
+    $default  reduce using rule 5 (_DeclList)
 
 
 state 28
 
-   10 FunDecl: LP ParamDeclList RP Block .
+   36 Node: DIGITS .
 
-    $default  reduce using rule 10 (FunDecl)
+    $default  reduce using rule 36 (Node)
 
 
 state 29
 
-   16 _ParamDeclListTail: COMMA ParamDeclListTail .
+   35 Node: ID .
+   37 Expr: ID . ASSIGN Expr
+   38     | ID . LS Expr RS BinaryOp Expr
+   39     | ID . LS Expr RS
+   40     | ID . LS Expr RS ASSIGN Expr
+   41     | ID . LP ExprList RP
 
-    $default  reduce using rule 16 (_ParamDeclListTail)
+    ASSIGN  shift, and go to state 50
+    LP      shift, and go to state 51
+    LS      shift, and go to state 52
+
+    $default  reduce using rule 35 (Node)
 
 
 state 30
 
-   19 _ParamDecl: LS . RS
+   26 Stmt: RETURN . Expr SEMI
 
-    RS  shift, and go to state 35
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Node       go to state 46
+    Expr       go to state 53
+    Operation  go to state 48
 
 
 state 31
 
-   18 ParamDecl: Type ID _ParamDecl .
+   28 Stmt: IF . LP Expr RP Stmt ELSE Stmt
 
-    $default  reduce using rule 18 (ParamDecl)
+    LP  shift, and go to state 54
 
 
 state 32
 
-   11 VarDeclList: VarDecl . VarDeclList
+   29 Stmt: WHILE . LP Expr RP Stmt
 
-    INT   shift, and go to state 1
-    CHAR  shift, and go to state 2
-
-    $default  reduce using rule 12 (VarDeclList)
-
-    VarDecl      go to state 32
-    VarDeclList  go to state 36
-    Type         go to state 34
+    LP  shift, and go to state 55
 
 
 state 33
 
-   21 Block: LB VarDeclList . StmtList RB
+   27 Stmt: BREAK . SEMI
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    RETURN  shift, and go to state 40
-    IF      shift, and go to state 41
-    WHILE   shift, and go to state 42
-    BREAK   shift, and go to state 43
-    PRINT   shift, and go to state 44
-    READ    shift, and go to state 45
-    SEMI    shift, and go to state 46
-    LB      shift, and go to state 27
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Block     go to state 50
-    StmtList  go to state 51
-    Stmt      go to state 52
-    Expr      go to state 53
-    UnaryOp   go to state 54
+    SEMI  shift, and go to state 56
 
 
 state 34
 
-    7 VarDecl: Type . ID _VarDecl
+   31 Stmt: PRINT . ID SEMI
 
-    ID  shift, and go to state 55
+    ID  shift, and go to state 57
 
 
 state 35
 
-   19 _ParamDecl: LS RS .
+   32 Stmt: READ . ID SEMI
 
-    $default  reduce using rule 19 (_ParamDecl)
+    ID  shift, and go to state 58
 
 
 state 36
 
-   11 VarDeclList: VarDecl VarDeclList .
+   24 Stmt: SEMI .
 
-    $default  reduce using rule 11 (VarDeclList)
+    $default  reduce using rule 24 (Stmt)
 
 
 state 37
 
-   37 Expr: DIGITS . _Expr
+   44 Operation: LP . Expr RP
 
-    OR      shift, and go to state 56
-    AND     shift, and go to state 57
-    GE      shift, and go to state 58
-    LE      shift, and go to state 59
-    GT      shift, and go to state 60
-    LT      shift, and go to state 61
-    NE      shift, and go to state 62
-    EQ      shift, and go to state 63
-    DIVIDE  shift, and go to state 64
-    MULT    shift, and go to state 65
-    MINUS   shift, and go to state 66
-    PLUS    shift, and go to state 67
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
 
-    $default  reduce using rule 48 (_Expr)
-
-    _Expr     go to state 68
-    BinaryOp  go to state 69
+    Node       go to state 46
+    Expr       go to state 59
+    Operation  go to state 48
 
 
 state 38
 
-   39 Expr: ID . ExprIdTail
+   46 Operation: MINUS . Operation
 
-    LS      shift, and go to state 70
-    LP      shift, and go to state 71
-    OR      shift, and go to state 56
-    AND     shift, and go to state 57
-    GE      shift, and go to state 58
-    LE      shift, and go to state 59
-    GT      shift, and go to state 60
-    LT      shift, and go to state 61
-    NE      shift, and go to state 62
-    EQ      shift, and go to state 63
-    DIVIDE  shift, and go to state 64
-    MULT    shift, and go to state 65
-    ASSIGN  shift, and go to state 72
-    MINUS   shift, and go to state 66
-    PLUS    shift, and go to state 67
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 60
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
 
-    $default  reduce using rule 48 (_Expr)
-
-    ExprIdTail  go to state 73
-    _Expr       go to state 74
-    BinaryOp    go to state 69
+    Node       go to state 46
+    Operation  go to state 61
 
 
 state 39
 
-   40 Expr: CHARS . _Expr
+   47 Operation: NOT . Operation
 
-    OR      shift, and go to state 56
-    AND     shift, and go to state 57
-    GE      shift, and go to state 58
-    LE      shift, and go to state 59
-    GT      shift, and go to state 60
-    LT      shift, and go to state 61
-    NE      shift, and go to state 62
-    EQ      shift, and go to state 63
-    DIVIDE  shift, and go to state 64
-    MULT    shift, and go to state 65
-    MINUS   shift, and go to state 66
-    PLUS    shift, and go to state 67
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 60
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
 
-    $default  reduce using rule 48 (_Expr)
-
-    _Expr     go to state 75
-    BinaryOp  go to state 69
+    Node       go to state 46
+    Operation  go to state 62
 
 
 state 40
 
-   29 Stmt: RETURN . Expr SEMI
+   10 VarDeclList: VarDecl . VarDeclList
+   11            | VarDecl .
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
+    INT   shift, and go to state 1
+    CHAR  shift, and go to state 2
 
-    Expr     go to state 76
-    UnaryOp  go to state 54
+    $default  reduce using rule 11 (VarDeclList)
+
+    VarDecl      go to state 40
+    VarDeclList  go to state 63
+    Type         go to state 43
 
 
 state 41
 
-   31 Stmt: IF . LP Expr RP Stmt ELSE Stmt
+   18 Block: LB VarDeclList . StmtList RB
 
-    LP  shift, and go to state 77
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    RETURN  shift, and go to state 30
+    IF      shift, and go to state 31
+    WHILE   shift, and go to state 32
+    BREAK   shift, and go to state 33
+    PRINT   shift, and go to state 34
+    READ    shift, and go to state 35
+    SEMI    shift, and go to state 36
+    LP      shift, and go to state 37
+    LB      shift, and go to state 23
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Block      go to state 42
+    StmtList   go to state 64
+    Stmt       go to state 45
+    Node       go to state 46
+    Expr       go to state 47
+    Operation  go to state 48
 
 
 state 42
 
-   32 Stmt: WHILE . LP Expr RP Stmt
+   30 Stmt: Block .
 
-    LP  shift, and go to state 78
+    $default  reduce using rule 30 (Stmt)
 
 
 state 43
 
-   30 Stmt: BREAK . SEMI
+    7 VarDecl: Type . ID SEMI
+    8        | Type . ID LS DIGITS RS SEMI
 
-    SEMI  shift, and go to state 79
+    ID  shift, and go to state 65
 
 
 state 44
 
-   34 Stmt: PRINT . ID SEMI
+   19 Block: LB StmtList . RB
 
-    ID  shift, and go to state 80
+    RB  shift, and go to state 66
 
 
 state 45
 
-   35 Stmt: READ . ID SEMI
+   22 StmtList: Stmt . StmtList
+   23         | Stmt .
 
-    ID  shift, and go to state 81
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    RETURN  shift, and go to state 30
+    IF      shift, and go to state 31
+    WHILE   shift, and go to state 32
+    BREAK   shift, and go to state 33
+    PRINT   shift, and go to state 34
+    READ    shift, and go to state 35
+    SEMI    shift, and go to state 36
+    LP      shift, and go to state 37
+    LB      shift, and go to state 23
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    $default  reduce using rule 23 (StmtList)
+
+    Block      go to state 42
+    StmtList   go to state 67
+    Stmt       go to state 45
+    Node       go to state 46
+    Expr       go to state 47
+    Operation  go to state 48
 
 
 state 46
 
-   27 Stmt: SEMI .
+   43 Operation: Node .
 
-    $default  reduce using rule 27 (Stmt)
+    $default  reduce using rule 43 (Operation)
 
 
 state 47
 
-   38 Expr: LP . Expr RP _Expr
+   25 Stmt: Expr . SEMI
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr     go to state 82
-    UnaryOp  go to state 54
+    SEMI  shift, and go to state 68
 
 
 state 48
 
-   55 UnaryOp: NOT .
+   42 Expr: Operation .
+   45 Operation: Operation . BinaryOp Operation
 
-    $default  reduce using rule 55 (UnaryOp)
+    OR      shift, and go to state 69
+    AND     shift, and go to state 70
+    GE      shift, and go to state 71
+    LE      shift, and go to state 72
+    GT      shift, and go to state 73
+    LT      shift, and go to state 74
+    NE      shift, and go to state 75
+    EQ      shift, and go to state 76
+    MINUS   shift, and go to state 77
+    PLUS    shift, and go to state 78
+    DIVIDE  shift, and go to state 79
+    MULT    shift, and go to state 80
+
+    $default  reduce using rule 42 (Expr)
+
+    BinaryOp  go to state 81
 
 
 state 49
 
-   54 UnaryOp: MINUS .
+   17 ParamDecl: Type ID LS RS .
 
-    $default  reduce using rule 54 (UnaryOp)
+    $default  reduce using rule 17 (ParamDecl)
 
 
 state 50
 
-   33 Stmt: Block .
+   37 Expr: ID ASSIGN . Expr
 
-    $default  reduce using rule 33 (Stmt)
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Node       go to state 46
+    Expr       go to state 82
+    Operation  go to state 48
 
 
 state 51
 
-   21 Block: LB VarDeclList StmtList . RB
+   41 Expr: ID LP . ExprList RP
 
-    RB  shift, and go to state 83
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    ExprList   go to state 83
+    Node       go to state 46
+    Expr       go to state 84
+    Operation  go to state 48
 
 
 state 52
 
-   24 StmtList: Stmt . _StmtList
+   38 Expr: ID LS . Expr RS BinaryOp Expr
+   39     | ID LS . Expr RS
+   40     | ID LS . Expr RS ASSIGN Expr
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    RETURN  shift, and go to state 40
-    IF      shift, and go to state 41
-    WHILE   shift, and go to state 42
-    BREAK   shift, and go to state 43
-    PRINT   shift, and go to state 44
-    READ    shift, and go to state 45
-    SEMI    shift, and go to state 46
-    LB      shift, and go to state 27
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
 
-    $default  reduce using rule 26 (_StmtList)
-
-    Block      go to state 50
-    StmtList   go to state 84
-    _StmtList  go to state 85
-    Stmt       go to state 52
-    Expr       go to state 53
-    UnaryOp    go to state 54
+    Node       go to state 46
+    Expr       go to state 85
+    Operation  go to state 48
 
 
 state 53
 
-   28 Stmt: Expr . SEMI
+   26 Stmt: RETURN Expr . SEMI
 
     SEMI  shift, and go to state 86
 
 
 state 54
 
-   36 Expr: UnaryOp . Expr
+   28 Stmt: IF LP . Expr RP Stmt ELSE Stmt
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
 
-    Expr     go to state 87
-    UnaryOp  go to state 54
+    Node       go to state 46
+    Expr       go to state 87
+    Operation  go to state 48
 
 
 state 55
 
-    7 VarDecl: Type ID . _VarDecl
+   29 Stmt: WHILE LP . Expr RP Stmt
 
-    SEMI  shift, and go to state 10
-    LS    shift, and go to state 11
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
 
-    _VarDecl  go to state 88
+    Node       go to state 46
+    Expr       go to state 88
+    Operation  go to state 48
 
 
 state 56
 
-   67 BinaryOp: OR .
+   27 Stmt: BREAK SEMI .
 
-    $default  reduce using rule 67 (BinaryOp)
+    $default  reduce using rule 27 (Stmt)
 
 
 state 57
 
-   66 BinaryOp: AND .
+   31 Stmt: PRINT ID . SEMI
 
-    $default  reduce using rule 66 (BinaryOp)
+    SEMI  shift, and go to state 89
 
 
 state 58
 
-   65 BinaryOp: GE .
+   32 Stmt: READ ID . SEMI
 
-    $default  reduce using rule 65 (BinaryOp)
+    SEMI  shift, and go to state 90
 
 
 state 59
 
-   63 BinaryOp: LE .
+   44 Operation: LP Expr . RP
 
-    $default  reduce using rule 63 (BinaryOp)
+    RP  shift, and go to state 91
 
 
 state 60
 
-   64 BinaryOp: GT .
+   35 Node: ID .
 
-    $default  reduce using rule 64 (BinaryOp)
+    $default  reduce using rule 35 (Node)
 
 
 state 61
 
-   62 BinaryOp: LT .
+   45 Operation: Operation . BinaryOp Operation
+   46          | MINUS Operation .
 
-    $default  reduce using rule 62 (BinaryOp)
+    $default  reduce using rule 46 (Operation)
+
+    BinaryOp  go to state 81
 
 
 state 62
 
-   61 BinaryOp: NE .
+   45 Operation: Operation . BinaryOp Operation
+   47          | NOT Operation .
 
-    $default  reduce using rule 61 (BinaryOp)
+    $default  reduce using rule 47 (Operation)
+
+    BinaryOp  go to state 81
 
 
 state 63
 
-   60 BinaryOp: EQ .
+   10 VarDeclList: VarDecl VarDeclList .
 
-    $default  reduce using rule 60 (BinaryOp)
+    $default  reduce using rule 10 (VarDeclList)
 
 
 state 64
 
-   59 BinaryOp: DIVIDE .
+   18 Block: LB VarDeclList StmtList . RB
 
-    $default  reduce using rule 59 (BinaryOp)
+    RB  shift, and go to state 92
 
 
 state 65
 
-   58 BinaryOp: MULT .
+    7 VarDecl: Type ID . SEMI
+    8        | Type ID . LS DIGITS RS SEMI
 
-    $default  reduce using rule 58 (BinaryOp)
+    SEMI  shift, and go to state 93
+    LS    shift, and go to state 94
 
 
 state 66
 
-   57 BinaryOp: MINUS .
+   19 Block: LB StmtList RB .
 
-    $default  reduce using rule 57 (BinaryOp)
+    $default  reduce using rule 19 (Block)
 
 
 state 67
 
-   56 BinaryOp: PLUS .
+   22 StmtList: Stmt StmtList .
 
-    $default  reduce using rule 56 (BinaryOp)
+    $default  reduce using rule 22 (StmtList)
 
 
 state 68
 
-   37 Expr: DIGITS _Expr .
+   25 Stmt: Expr SEMI .
 
-    $default  reduce using rule 37 (Expr)
+    $default  reduce using rule 25 (Stmt)
 
 
 state 69
 
-   47 _Expr: BinaryOp . Expr
+   59 BinaryOp: OR .
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr     go to state 89
-    UnaryOp  go to state 54
+    $default  reduce using rule 59 (BinaryOp)
 
 
 state 70
 
-   43 ExprIdTail: LS . Expr RS ExprArrayTail
+   58 BinaryOp: AND .
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr     go to state 90
-    UnaryOp  go to state 54
+    $default  reduce using rule 58 (BinaryOp)
 
 
 state 71
 
-   42 ExprIdTail: LP . ExprList RP _Expr
+   57 BinaryOp: GE .
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    $default  reduce using rule 50 (ExprList)
-
-    Expr          go to state 91
-    ExprList      go to state 92
-    ExprListTail  go to state 93
-    UnaryOp       go to state 54
+    $default  reduce using rule 57 (BinaryOp)
 
 
 state 72
 
-   44 ExprIdTail: ASSIGN . Expr
+   55 BinaryOp: LE .
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr     go to state 94
-    UnaryOp  go to state 54
+    $default  reduce using rule 55 (BinaryOp)
 
 
 state 73
 
-   39 Expr: ID ExprIdTail .
+   56 BinaryOp: GT .
 
-    $default  reduce using rule 39 (Expr)
+    $default  reduce using rule 56 (BinaryOp)
 
 
 state 74
 
-   41 ExprIdTail: _Expr .
+   54 BinaryOp: LT .
 
-    $default  reduce using rule 41 (ExprIdTail)
+    $default  reduce using rule 54 (BinaryOp)
 
 
 state 75
 
-   40 Expr: CHARS _Expr .
+   53 BinaryOp: NE .
 
-    $default  reduce using rule 40 (Expr)
+    $default  reduce using rule 53 (BinaryOp)
 
 
 state 76
 
-   29 Stmt: RETURN Expr . SEMI
+   52 BinaryOp: EQ .
 
-    SEMI  shift, and go to state 95
+    $default  reduce using rule 52 (BinaryOp)
 
 
 state 77
 
-   31 Stmt: IF LP . Expr RP Stmt ELSE Stmt
+   49 BinaryOp: MINUS .
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr     go to state 96
-    UnaryOp  go to state 54
+    $default  reduce using rule 49 (BinaryOp)
 
 
 state 78
 
-   32 Stmt: WHILE LP . Expr RP Stmt
+   48 BinaryOp: PLUS .
 
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr     go to state 97
-    UnaryOp  go to state 54
+    $default  reduce using rule 48 (BinaryOp)
 
 
 state 79
 
-   30 Stmt: BREAK SEMI .
+   51 BinaryOp: DIVIDE .
 
-    $default  reduce using rule 30 (Stmt)
+    $default  reduce using rule 51 (BinaryOp)
 
 
 state 80
 
-   34 Stmt: PRINT ID . SEMI
+   50 BinaryOp: MULT .
 
-    SEMI  shift, and go to state 98
+    $default  reduce using rule 50 (BinaryOp)
 
 
 state 81
 
-   35 Stmt: READ ID . SEMI
+   45 Operation: Operation BinaryOp . Operation
 
-    SEMI  shift, and go to state 99
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 60
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Node       go to state 46
+    Operation  go to state 95
 
 
 state 82
 
-   38 Expr: LP Expr . RP _Expr
+   37 Expr: ID ASSIGN Expr .
 
-    RP  shift, and go to state 100
+    $default  reduce using rule 37 (Expr)
 
 
 state 83
 
-   21 Block: LB VarDeclList StmtList RB .
+   34 ExprList: ExprList . COMMA Expr
+   41 Expr: ID LP ExprList . RP
 
-    $default  reduce using rule 21 (Block)
+    COMMA  shift, and go to state 96
+    RP     shift, and go to state 97
 
 
 state 84
 
-   25 _StmtList: StmtList .
+   33 ExprList: Expr .
 
-    $default  reduce using rule 25 (_StmtList)
+    $default  reduce using rule 33 (ExprList)
 
 
 state 85
 
-   24 StmtList: Stmt _StmtList .
+   38 Expr: ID LS Expr . RS BinaryOp Expr
+   39     | ID LS Expr . RS
+   40     | ID LS Expr . RS ASSIGN Expr
 
-    $default  reduce using rule 24 (StmtList)
+    RS  shift, and go to state 98
 
 
 state 86
 
-   28 Stmt: Expr SEMI .
+   26 Stmt: RETURN Expr SEMI .
 
-    $default  reduce using rule 28 (Stmt)
+    $default  reduce using rule 26 (Stmt)
 
 
 state 87
 
-   36 Expr: UnaryOp Expr .
+   28 Stmt: IF LP Expr . RP Stmt ELSE Stmt
 
-    $default  reduce using rule 36 (Expr)
+    RP  shift, and go to state 99
 
 
 state 88
 
-    7 VarDecl: Type ID _VarDecl .
+   29 Stmt: WHILE LP Expr . RP Stmt
 
-    $default  reduce using rule 7 (VarDecl)
+    RP  shift, and go to state 100
 
 
 state 89
 
-   47 _Expr: BinaryOp Expr .
+   31 Stmt: PRINT ID SEMI .
 
-    $default  reduce using rule 47 (_Expr)
+    $default  reduce using rule 31 (Stmt)
 
 
 state 90
 
-   43 ExprIdTail: LS Expr . RS ExprArrayTail
-
-    RS  shift, and go to state 101
-
-
-state 91
-
-   51 ExprListTail: Expr . _ExprListTail
-
-    COMMA  shift, and go to state 102
-
-    $default  reduce using rule 53 (_ExprListTail)
-
-    _ExprListTail  go to state 103
-
-
-state 92
-
-   42 ExprIdTail: LP ExprList . RP _Expr
-
-    RP  shift, and go to state 104
-
-
-state 93
-
-   49 ExprList: ExprListTail .
-
-    $default  reduce using rule 49 (ExprList)
-
-
-state 94
-
-   44 ExprIdTail: ASSIGN Expr .
-
-    $default  reduce using rule 44 (ExprIdTail)
-
-
-state 95
-
-   29 Stmt: RETURN Expr SEMI .
-
-    $default  reduce using rule 29 (Stmt)
-
-
-state 96
-
-   31 Stmt: IF LP Expr . RP Stmt ELSE Stmt
-
-    RP  shift, and go to state 105
-
-
-state 97
-
-   32 Stmt: WHILE LP Expr . RP Stmt
-
-    RP  shift, and go to state 106
-
-
-state 98
-
-   34 Stmt: PRINT ID SEMI .
-
-    $default  reduce using rule 34 (Stmt)
-
-
-state 99
-
-   35 Stmt: READ ID SEMI .
-
-    $default  reduce using rule 35 (Stmt)
-
-
-state 100
-
-   38 Expr: LP Expr RP . _Expr
-
-    OR      shift, and go to state 56
-    AND     shift, and go to state 57
-    GE      shift, and go to state 58
-    LE      shift, and go to state 59
-    GT      shift, and go to state 60
-    LT      shift, and go to state 61
-    NE      shift, and go to state 62
-    EQ      shift, and go to state 63
-    DIVIDE  shift, and go to state 64
-    MULT    shift, and go to state 65
-    MINUS   shift, and go to state 66
-    PLUS    shift, and go to state 67
-
-    $default  reduce using rule 48 (_Expr)
-
-    _Expr     go to state 107
-    BinaryOp  go to state 69
-
-
-state 101
-
-   43 ExprIdTail: LS Expr RS . ExprArrayTail
-
-    OR      shift, and go to state 56
-    AND     shift, and go to state 57
-    GE      shift, and go to state 58
-    LE      shift, and go to state 59
-    GT      shift, and go to state 60
-    LT      shift, and go to state 61
-    NE      shift, and go to state 62
-    EQ      shift, and go to state 63
-    DIVIDE  shift, and go to state 64
-    MULT    shift, and go to state 65
-    ASSIGN  shift, and go to state 108
-    MINUS   shift, and go to state 66
-    PLUS    shift, and go to state 67
-
-    $default  reduce using rule 48 (_Expr)
-
-    ExprArrayTail  go to state 109
-    _Expr          go to state 110
-    BinaryOp       go to state 69
-
-
-state 102
-
-   52 _ExprListTail: COMMA . ExprListTail
-
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr          go to state 91
-    ExprListTail  go to state 111
-    UnaryOp       go to state 54
-
-
-state 103
-
-   51 ExprListTail: Expr _ExprListTail .
-
-    $default  reduce using rule 51 (ExprListTail)
-
-
-state 104
-
-   42 ExprIdTail: LP ExprList RP . _Expr
-
-    OR      shift, and go to state 56
-    AND     shift, and go to state 57
-    GE      shift, and go to state 58
-    LE      shift, and go to state 59
-    GT      shift, and go to state 60
-    LT      shift, and go to state 61
-    NE      shift, and go to state 62
-    EQ      shift, and go to state 63
-    DIVIDE  shift, and go to state 64
-    MULT    shift, and go to state 65
-    MINUS   shift, and go to state 66
-    PLUS    shift, and go to state 67
-
-    $default  reduce using rule 48 (_Expr)
-
-    _Expr     go to state 112
-    BinaryOp  go to state 69
-
-
-state 105
-
-   31 Stmt: IF LP Expr RP . Stmt ELSE Stmt
-
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    RETURN  shift, and go to state 40
-    IF      shift, and go to state 41
-    WHILE   shift, and go to state 42
-    BREAK   shift, and go to state 43
-    PRINT   shift, and go to state 44
-    READ    shift, and go to state 45
-    SEMI    shift, and go to state 46
-    LB      shift, and go to state 27
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Block    go to state 50
-    Stmt     go to state 113
-    Expr     go to state 53
-    UnaryOp  go to state 54
-
-
-state 106
-
-   32 Stmt: WHILE LP Expr RP . Stmt
-
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    RETURN  shift, and go to state 40
-    IF      shift, and go to state 41
-    WHILE   shift, and go to state 42
-    BREAK   shift, and go to state 43
-    PRINT   shift, and go to state 44
-    READ    shift, and go to state 45
-    SEMI    shift, and go to state 46
-    LB      shift, and go to state 27
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Block    go to state 50
-    Stmt     go to state 114
-    Expr     go to state 53
-    UnaryOp  go to state 54
-
-
-state 107
-
-   38 Expr: LP Expr RP _Expr .
-
-    $default  reduce using rule 38 (Expr)
-
-
-state 108
-
-   46 ExprArrayTail: ASSIGN . Expr
-
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Expr     go to state 115
-    UnaryOp  go to state 54
-
-
-state 109
-
-   43 ExprIdTail: LS Expr RS ExprArrayTail .
-
-    $default  reduce using rule 43 (ExprIdTail)
-
-
-state 110
-
-   45 ExprArrayTail: _Expr .
-
-    $default  reduce using rule 45 (ExprArrayTail)
-
-
-state 111
-
-   52 _ExprListTail: COMMA ExprListTail .
-
-    $default  reduce using rule 52 (_ExprListTail)
-
-
-state 112
-
-   42 ExprIdTail: LP ExprList RP _Expr .
-
-    $default  reduce using rule 42 (ExprIdTail)
-
-
-state 113
-
-   31 Stmt: IF LP Expr RP Stmt . ELSE Stmt
-
-    ELSE  shift, and go to state 116
-
-
-state 114
-
-   32 Stmt: WHILE LP Expr RP Stmt .
+   32 Stmt: READ ID SEMI .
 
     $default  reduce using rule 32 (Stmt)
 
 
-state 115
+state 91
 
-   46 ExprArrayTail: ASSIGN Expr .
+   44 Operation: LP Expr RP .
 
-    $default  reduce using rule 46 (ExprArrayTail)
-
-
-state 116
-
-   31 Stmt: IF LP Expr RP Stmt ELSE . Stmt
-
-    DIGITS  shift, and go to state 37
-    ID      shift, and go to state 38
-    CHARS   shift, and go to state 39
-    RETURN  shift, and go to state 40
-    IF      shift, and go to state 41
-    WHILE   shift, and go to state 42
-    BREAK   shift, and go to state 43
-    PRINT   shift, and go to state 44
-    READ    shift, and go to state 45
-    SEMI    shift, and go to state 46
-    LB      shift, and go to state 27
-    LP      shift, and go to state 47
-    NOT     shift, and go to state 48
-    MINUS   shift, and go to state 49
-
-    Block    go to state 50
-    Stmt     go to state 117
-    Expr     go to state 53
-    UnaryOp  go to state 54
+    $default  reduce using rule 44 (Operation)
 
 
-state 117
+state 92
 
-   31 Stmt: IF LP Expr RP Stmt ELSE Stmt .
+   18 Block: LB VarDeclList StmtList RB .
 
-    $default  reduce using rule 31 (Stmt)
+    $default  reduce using rule 18 (Block)
+
+
+state 93
+
+    7 VarDecl: Type ID SEMI .
+
+    $default  reduce using rule 7 (VarDecl)
+
+
+state 94
+
+    8 VarDecl: Type ID LS . DIGITS RS SEMI
+
+    DIGITS  shift, and go to state 101
+
+
+state 95
+
+   45 Operation: Operation . BinaryOp Operation
+   45          | Operation BinaryOp Operation .
+
+    OR      shift, and go to state 69
+    AND     shift, and go to state 70
+    GE      shift, and go to state 71
+    LE      shift, and go to state 72
+    GT      shift, and go to state 73
+    LT      shift, and go to state 74
+    NE      shift, and go to state 75
+    EQ      shift, and go to state 76
+    MINUS   shift, and go to state 77
+    PLUS    shift, and go to state 78
+    DIVIDE  shift, and go to state 79
+    MULT    shift, and go to state 80
+
+    OR        [reduce using rule 45 (Operation)]
+    AND       [reduce using rule 45 (Operation)]
+    GE        [reduce using rule 45 (Operation)]
+    LE        [reduce using rule 45 (Operation)]
+    GT        [reduce using rule 45 (Operation)]
+    LT        [reduce using rule 45 (Operation)]
+    NE        [reduce using rule 45 (Operation)]
+    EQ        [reduce using rule 45 (Operation)]
+    MINUS     [reduce using rule 45 (Operation)]
+    PLUS      [reduce using rule 45 (Operation)]
+    DIVIDE    [reduce using rule 45 (Operation)]
+    MULT      [reduce using rule 45 (Operation)]
+    $default  reduce using rule 45 (Operation)
+
+    BinaryOp  go to state 81
+
+
+state 96
+
+   34 ExprList: ExprList COMMA . Expr
+
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Node       go to state 46
+    Expr       go to state 102
+    Operation  go to state 48
+
+
+state 97
+
+   41 Expr: ID LP ExprList RP .
+
+    $default  reduce using rule 41 (Expr)
+
+
+state 98
+
+   38 Expr: ID LS Expr RS . BinaryOp Expr
+   39     | ID LS Expr RS .
+   40     | ID LS Expr RS . ASSIGN Expr
+
+    ASSIGN  shift, and go to state 103
+    OR      shift, and go to state 69
+    AND     shift, and go to state 70
+    GE      shift, and go to state 71
+    LE      shift, and go to state 72
+    GT      shift, and go to state 73
+    LT      shift, and go to state 74
+    NE      shift, and go to state 75
+    EQ      shift, and go to state 76
+    MINUS   shift, and go to state 77
+    PLUS    shift, and go to state 78
+    DIVIDE  shift, and go to state 79
+    MULT    shift, and go to state 80
+
+    $default  reduce using rule 39 (Expr)
+
+    BinaryOp  go to state 104
+
+
+state 99
+
+   28 Stmt: IF LP Expr RP . Stmt ELSE Stmt
+
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    RETURN  shift, and go to state 30
+    IF      shift, and go to state 31
+    WHILE   shift, and go to state 32
+    BREAK   shift, and go to state 33
+    PRINT   shift, and go to state 34
+    READ    shift, and go to state 35
+    SEMI    shift, and go to state 36
+    LP      shift, and go to state 37
+    LB      shift, and go to state 23
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Block      go to state 42
+    Stmt       go to state 105
+    Node       go to state 46
+    Expr       go to state 47
+    Operation  go to state 48
+
+
+state 100
+
+   29 Stmt: WHILE LP Expr RP . Stmt
+
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    RETURN  shift, and go to state 30
+    IF      shift, and go to state 31
+    WHILE   shift, and go to state 32
+    BREAK   shift, and go to state 33
+    PRINT   shift, and go to state 34
+    READ    shift, and go to state 35
+    SEMI    shift, and go to state 36
+    LP      shift, and go to state 37
+    LB      shift, and go to state 23
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Block      go to state 42
+    Stmt       go to state 106
+    Node       go to state 46
+    Expr       go to state 47
+    Operation  go to state 48
+
+
+state 101
+
+    8 VarDecl: Type ID LS DIGITS . RS SEMI
+
+    RS  shift, and go to state 107
+
+
+state 102
+
+   34 ExprList: ExprList COMMA Expr .
+
+    $default  reduce using rule 34 (ExprList)
+
+
+state 103
+
+   40 Expr: ID LS Expr RS ASSIGN . Expr
+
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Node       go to state 46
+    Expr       go to state 108
+    Operation  go to state 48
+
+
+state 104
+
+   38 Expr: ID LS Expr RS BinaryOp . Expr
+
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    LP      shift, and go to state 37
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Node       go to state 46
+    Expr       go to state 109
+    Operation  go to state 48
+
+
+state 105
+
+   28 Stmt: IF LP Expr RP Stmt . ELSE Stmt
+
+    ELSE  shift, and go to state 110
+
+
+state 106
+
+   29 Stmt: WHILE LP Expr RP Stmt .
+
+    $default  reduce using rule 29 (Stmt)
+
+
+state 107
+
+    8 VarDecl: Type ID LS DIGITS RS . SEMI
+
+    SEMI  shift, and go to state 111
+
+
+state 108
+
+   40 Expr: ID LS Expr RS ASSIGN Expr .
+
+    $default  reduce using rule 40 (Expr)
+
+
+state 109
+
+   38 Expr: ID LS Expr RS BinaryOp Expr .
+
+    $default  reduce using rule 38 (Expr)
+
+
+state 110
+
+   28 Stmt: IF LP Expr RP Stmt ELSE . Stmt
+
+    DIGITS  shift, and go to state 28
+    ID      shift, and go to state 29
+    RETURN  shift, and go to state 30
+    IF      shift, and go to state 31
+    WHILE   shift, and go to state 32
+    BREAK   shift, and go to state 33
+    PRINT   shift, and go to state 34
+    READ    shift, and go to state 35
+    SEMI    shift, and go to state 36
+    LP      shift, and go to state 37
+    LB      shift, and go to state 23
+    MINUS   shift, and go to state 38
+    NOT     shift, and go to state 39
+
+    Block      go to state 42
+    Stmt       go to state 112
+    Node       go to state 46
+    Expr       go to state 47
+    Operation  go to state 48
+
+
+state 111
+
+    8 VarDecl: Type ID LS DIGITS RS SEMI .
+
+    $default  reduce using rule 8 (VarDecl)
+
+
+state 112
+
+   28 Stmt: IF LP Expr RP Stmt ELSE Stmt .
+
+    $default  reduce using rule 28 (Stmt)
